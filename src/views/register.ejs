@@ -1,0 +1,22 @@
+  <!DOCTYPE html>
+  <html lang="vi">
+  <head>
+    <meta charset="UTF-8">
+    <title>Đăng ký</title>
+    <!-- Gọi CSS qua /static/css/... -->
+    <link rel="stylesheet" href="/static/assets/css/styles.css">
+  </head>
+  <body>
+    <h2>Form đăng ký</h2>
+    <form id="registerForm">
+      <input type="text" id="fullName" placeholder="Họ và tên" autocomplete="name" required>
+      <input type="email" id="email" placeholder="Email" autocomplete="email" required>
+      <input type="password" id="password" placeholder="Mật khẩu" autocomplete="current-password" required>      
+      <button type="submit">Đăng ký</button>
+    </form>
+    
+
+    <!-- Gọi JS qua /static/js/... -->
+    <script src="/static/js/register.js"></script>
+  </body>
+  </html>

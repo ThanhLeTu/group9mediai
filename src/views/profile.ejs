@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Hồ sơ cá nhân</title>
+  <link rel="stylesheet" href="/static/assets/css/styles.css">
+</head>
+<body>
+  <h2>Thông tin cá nhân</h2>
+
+  <form id="profileForm">
+    <label>Họ và tên:</label>
+    <input type="text" id="fullName" placeholder="Họ và tên" value="<%= user?.fullName || '' %>" disabled>
+
+    <label>Giới tính:</label>
+    <select id="gender">
+      <option value="">-- Chọn --</option>
+      <option value="male">Nam</option>
+      <option value="female">Nữ</option>
+      <option value="other">Khác</option>
+    </select>
+
+    <label>Ngày sinh:</label>
+    <input type="date" id="birthDate">
+
+    <label>Số điện thoại:</label>
+    <input type="text" id="phone" placeholder="Số điện thoại">
+
+    <label>Địa chỉ:</label>
+    <input type="text" id="address" placeholder="Địa chỉ">
+
+    <label>Số CMND/CCCD:</label>
+    <input type="text" id="identityNumber" placeholder="CMND/CCCD">
+
+    <button type="submit">Cập nhật</button>
+  </form>
+
+  <script src="/static/js/profile.js"></script>
+</body>
+</html>

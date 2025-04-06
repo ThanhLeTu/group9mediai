@@ -1,16 +1,32 @@
 const express = require('express');
-const connectDB = require('./src/config/db'); // đường dẫn đúng
+const path = require('path');
 require('dotenv').config();
 
-const app = express();
-const port = process.env.PORT || 8080;
+const connectDB = require('./src/config/db');
+const webRoutes = require('./src/routes/web');
+const apiRoutes = require('./src/routes/api');
 
+const app = express();
 connectDB();
 
-app.get('/', (req, res) => {
-  res.send('MongoDB Connected');
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(express.static(path.join(__dirname, 'public')));
+
+app.use('/static', express.static(path.join(__dirname, 'public')));
+
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'src', 'views'));
+
+app.use('/', webRoutes);
+app.use('/api', apiRoutes);   
+
+// Route test
+app.get('/register', (req, res) => {
+  res.render('register');
 });
 
-app.listen(port, () => {
-  console.log(`🚀 Server is running at http://localhost:${port}`);
+const PORT = process.env.PORT || 8080;
+app.listen(PORT, () => {
+  console.log(`🚀 Server is running at http://localhost:${PORT}`);
 });
