@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Medicare Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet" />
+  </head>
+  <body class="bg-gray-900 text-white">
+    <div class="flex">
+      <!-- Sidebar -->
+      <div class="w-64 bg-gray-800 h-screen p-4">
+        <div class="flex items-center mb-8">
+          <img src="https://storage.googleapis.com/a1aa/image/GWAChVj6nrrpUD0VQ9m5wkUkjXYqbn6USa78SlozvYk.jpg" width="40" height="40" class="mr-2" alt="Medicare logo" />
+          <span class="text-xl font-bold">Medicare</span>
+        </div>
+        <nav>
+          <ul>
+            <li class="mb-4">
+              <a href="#" class="flex items-center text-gray-400 hover:text-white">
+                <i class="fas fa-tachometer-alt mr-2"></i> Dashboard
+              </a>
+            </li>
+            <li class="mb-4">
+              <a href="#" class="flex items-center text-gray-400 hover:text-white">
+                <i class="fas fa-user-md mr-2"></i> Patients
+              </a>
+            </li>
+            <li class="mb-4">
+              <a href="#" class="flex items-center text-gray-400 hover:text-white">
+                <i class="fas fa-stethoscope mr-2"></i> Doctors
+              </a>
+            </li>
+            <li class="mb-4">
+              <a href="#" class="flex items-center text-gray-400 hover:text-white">
+                <i class="fas fa-cogs mr-2"></i> Support
+              </a>
+            </li>
+            <li class="mb-4">
+              <a href="#" class="flex items-center text-gray-400 hover:text-white">
+                <i class="fas fa-th-large mr-2"></i> Features
+              </a>
+            </li>
+            <li class="mb-4">
+              <a href="#" class="flex items-center text-gray-400 hover:text-white">
+                <i class="fas fa-chart-bar mr-2"></i> Forms & Charts
+              </a>
+            </li>
+            <li class="mb-4">
+              <a href="#" class="flex items-center text-gray-400 hover:text-white">
+                <i class="fas fa-table mr-2"></i> Tables
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+
+      <!-- Main Content -->
+      <div class="flex-1 p-6">
+        <!-- Include Header -->
+        <%- include('partials/header-admin') %>
+
+        <!-- Welcome Card -->
+        <div class="bg-teal-500 p-6 rounded-lg mb-6">
+          <div class="flex items-center">
+            <div class="flex-1">
+              <h2 class="text-2xl font-bold mb-2">Hello Jhon!</h2>
+              <p>Here are your important tasks, updates, and alerts. You can set your in-app preferences here.</p>
+            </div>
+            <img src="https://storage.googleapis.com/a1aa/image/mI4uO94b5eQ0yWPBNJCJr6axxaRPdP94FftVyS58fdE.jpg" width="100" height="100" alt="Doctors illustration" class="w-24 h-24" />
+          </div>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+          <!-- Cards... (Total Patients, Staffs, Rooms, Cars) -->
+          <!-- Copy your card blocks here -->
+        </div>
+
+        <!-- Activity and Success Stats -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <!-- Left: Activity -->
+          <!-- Right: Success Stats -->
+          <!-- Copy your content blocks here -->
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

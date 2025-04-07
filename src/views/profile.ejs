@@ -6,12 +6,12 @@
   <link rel="stylesheet" href="/static/assets/css/styles.css">
 </head>
 <body>
+  <%- include('partials/header-client') %>
   <h2>Thông tin cá nhân</h2>
 
   <form id="profileForm">
     <label>Họ và tên:</label>
-    <input type="text" id="fullName" placeholder="Họ và tên" value="<%= user?.fullName || '' %>" disabled>
-
+    <input type="text" id="fullName" placeholder="Họ và tên" disabled>
     <label>Giới tính:</label>
     <select id="gender">
       <option value="">-- Chọn --</option>

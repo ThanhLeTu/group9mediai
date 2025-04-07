@@ -25,6 +25,10 @@ app.use('/api', apiRoutes);
 app.get('/register', (req, res) => {
   res.render('register');
 });
+app.get('/', (req, res) => {
+  res.redirect('/welcome');
+});
+
 
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {

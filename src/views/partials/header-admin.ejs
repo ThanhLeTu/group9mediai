@@ -1,0 +1,21 @@
+<!-- header-admin.ejs -->
+<div class="flex justify-between items-center mb-6">
+    <div class="flex items-center">
+      <button class="text-gray-400 hover:text-white mr-4">
+        <i class="fas fa-bars"></i>
+      </button>
+      <input class="bg-gray-800 text-gray-400 p-2 rounded" type="text" placeholder="Search" />
+    </div>
+    <div class="flex items-center">
+        <button onclick="logout()" title="Đăng xuất" class="text-gray-400 hover:text-white mr-4">
+            <i class="fas fa-sign-out-alt"></i>
+          </button>
+      <img class="rounded-full" src="https://storage.googleapis.com/a1aa/image/D6O2Ag0OC-d6T0cXib5ULytV4idQE1pe5daFGz8oSkY.jpg" width="40" height="40" alt="User profile" />
+    </div>
+  </div>
+  <script>
+    function logout() {
+      localStorage.removeItem("token");
+      window.location.href = "/login";
+    }
+  </script>

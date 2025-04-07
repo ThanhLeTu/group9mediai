@@ -5,10 +5,13 @@
   <title>Welcome</title>
 </head>
 <body>
+
+  <!-- ✅ Gọi header có avatar -->
+  <%- include('partials/header-client') %>
+
   <h1>Chào mừng <%= email %></h1>
-  <div id="dashboard"></div> <!-- nơi hiển thị nội dung từ API -->
+  <div id="dashboard"></div>
 
   <script src="/static/js/admin.js"></script>
-
 </body>
 </html>
