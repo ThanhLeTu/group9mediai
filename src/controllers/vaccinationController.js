@@ -1,4 +1,5 @@
 const VaccinationSchedule = require('../models/vaccinationSchedule.model');
+const User = require('../models/user.model');
 
 exports.getSchedules = async (req, res) => {
   try {
@@ -48,3 +49,49 @@ exports.deleteSchedule = async (req, res) => {
     res.status(500).json({ message: 'Lỗi xóa lịch tiêm', error });
   }
 };
+
+
+///////////////
+
+// Giao diện admin
+exports.renderPage = async (req, res) => {
+    try {
+      const schedules = await VaccinationSchedule.find()
+        .populate('userId', 'fullName email');
+      const users = await User.find({}, 'fullName email');
+  
+      res.render('admin/vaccinations', { schedules, users });
+    } catch (err) {
+      res.status(500).send('Lỗi hiển thị lịch tiêm');
+    }
+  };
+  
+  // Tạo hoặc cập nhật
+  exports.handleForm = async (req, res) => {
+    const { id, userId, vaccineName, scheduledDate, dose, status } = req.body;
+  
+    try {
+      if (id) {
+        await VaccinationSchedule.findByIdAndUpdate(id, {
+          userId, vaccineName, scheduledDate, dose, status
+        });
+      } else {
+        await VaccinationSchedule.create({
+          userId, vaccineName, scheduledDate, dose, status
+        });
+      }
+  
+      res.redirect('/admin/vaccinations');
+    } catch (err) {
+      res.status(500).send('Lỗi xử lý lịch tiêm');
+    }
+  };
+  
+  exports.delete = async (req, res) => {
+    try {
+      await VaccinationSchedule.findByIdAndDelete(req.params.id);
+      res.redirect('/admin/vaccinations');
+    } catch (err) {
+      res.status(500).send('Lỗi xoá lịch tiêm');
+    }
+  };

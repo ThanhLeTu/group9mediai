@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Quản lý chuyên khoa</title>
+  <link rel="stylesheet" href="/static/assets/css/style.css">
+  <style>
+    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+    th, td { padding: 10px; border: 1px solid #ccc; text-align: left; }
+    form { margin-bottom: 20px; }
+    input, textarea, button { padding: 8px; margin-top: 5px; width: 100%; }
+    .actions { display: flex; gap: 10px; }
+  </style>
+</head>
+<body>
+  <h1>📚 Quản lý chuyên khoa</h1>
+
+  <!-- Form thêm / cập nhật -->
+  <h2><span id="form-title">Thêm chuyên khoa</span></h2>
+  <form id="specialization-form" method="POST" action="/admin/specializations">
+    <input type="hidden" name="id" id="spec-id">
+
+    <label for="name">Tên chuyên khoa:</label>
+    <input type="text" name="name" id="spec-name" required>
+
+    <label for="description">Mô tả:</label>
+    <textarea name="description" id="spec-description"></textarea>
+
+    <button type="submit">💾 Lưu</button>
+  </form>
+
+  <hr>
+
+  <!-- Danh sách chuyên khoa -->
+  <h2>Danh sách chuyên khoa</h2>
+  <% if (specializations.length === 0) { %>
+    <p>Chưa có chuyên khoa nào.</p>
+  <% } else { %>
+    <table>
+      <thead>
+        <tr>
+          <th>Tên chuyên khoa</th>
+          <th>Mô tả</th>
+          <th>Hành động</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% specializations.forEach(spec => { %>
+          <tr>
+            <td><%= spec.name %></td>
+            <td><%= spec.description || '' %></td>
+            <td class="actions">
+              <button type="button"
+                      onclick="editSpec('<%= spec._id %>', '<%= spec.name %>', `<%= spec.description %>`)">✏️ Sửa</button>
+
+              <form action="/admin/specializations/delete/<%= spec._id %>" method="POST" onsubmit="return confirm('Bạn chắc chắn muốn xóa chuyên khoa này?')">
+                <button type="submit">🗑️ Xóa</button>
+              </form>
+            </td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  <% } %>
+
+  <script>
+    function editSpec(id, name, description) {
+      document.getElementById('spec-id').value = id;
+      document.getElementById('spec-name').value = name;
+      document.getElementById('spec-description').value = description;
+      document.getElementById('form-title').textContent = 'Cập nhật chuyên khoa';
+    }
+  </script>
+</body>
+</html>

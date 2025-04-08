@@ -4,7 +4,7 @@ const user = JSON.parse(localStorage.getItem("user"));
 
 if (token && user) {
   if (user.role === "admin") {
-    window.location.href = "dashboard";
+    window.location.href = "admin/dashboard";
   } else {
     window.location.href = "welcome";
   }
@@ -37,7 +37,7 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
 
       // ✅ Điều hướng theo vai trò
       if (result.user.role === "admin") {
-        window.location.href = "dashboard";
+        window.location.href = "admin/dashboard";
       } else {
         window.location.href = "welcome";
       }

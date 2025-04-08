@@ -58,3 +58,29 @@ exports.deleteSpecialization = async (req, res) => {
     res.status(500).json({ message: 'Lỗi xóa chuyên khoa', error });
   }
 };
+///////////////////
+
+// Dành cho giao diện EJS
+exports.renderPage = async (req, res) => {
+    const specializations = await Specialization.find();
+    res.render('admin/specializations', { specializations });
+  };
+  
+  exports.handleForm = async (req, res) => {
+    const { id, name, description } = req.body;
+  
+    if (id) {
+      await Specialization.findByIdAndUpdate(id, { name, description });
+    } else {
+      const exists = await Specialization.findOne({ name });
+      if (!exists) await Specialization.create({ name, description });
+    }
+  
+    res.redirect('/admin/specializations');
+  };
+
+  
+exports.delete = async (req, res) => {
+    await Specialization.findByIdAndDelete(req.params.id);
+    res.redirect('/admin/specializations');
+  };

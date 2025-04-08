@@ -54,3 +54,36 @@ exports.deleteHospital = async (req, res) => {
     res.status(500).json({ message: 'Lỗi xóa bệnh viện', error });
   }
 };
+
+///////////////////
+// Hiển thị danh sách
+exports.renderPage = async (req, res) => {
+    const hospitals = await Hospital.find();
+    res.render('admin/hospitals', { hospitals });
+  };
+  
+  // Thêm hoặc cập nhật
+  exports.handleForm = async (req, res) => {
+    const { id, name, address, phone } = req.body;
+  
+    try {
+      if (id) {
+        await Hospital.findByIdAndUpdate(id, { name, address, phone });
+      } else {
+        await Hospital.create({ name, address, phone });
+      }
+      res.redirect('/admin/hospitals');
+    } catch (error) {
+      res.status(500).send('Lỗi xử lý bệnh viện');
+    }
+  };
+  
+  // Xóa bệnh viện
+  exports.delete = async (req, res) => {
+    try {
+      await Hospital.findByIdAndDelete(req.params.id);
+      res.redirect('/admin/hospitals');
+    } catch (error) {
+      res.status(500).send('Lỗi xoá bệnh viện');
+    }
+  };

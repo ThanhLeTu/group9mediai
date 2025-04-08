@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>💉 Quản lý lịch tiêm chủng</title>
+  <style>
+    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+    th, td { border: 1px solid #ccc; padding: 10px; text-align: left; }
+    form { margin-bottom: 20px; }
+    input, select, button { padding: 8px; width: 100%; margin-top: 5px; }
+  </style>
+</head>
+<body>
+  <h1>💉 Quản lý lịch tiêm chủng</h1>
+
+  <form method="POST" action="/admin/vaccinations">
+    <input type="hidden" name="id" id="vac-id">
+
+    <label>Người dùng:</label>
+    <select name="userId" id="vac-userId" required>
+      <% users.forEach(u => { %>
+        <option value="<%= u._id %>"><%= u.fullName %> - <%= u.email %></option>
+      <% }) %>
+    </select>
+
+    <label>Tên vắc-xin:</label>
+    <input type="text" name="vaccineName" id="vac-vaccineName" required>
+
+    <label>Ngày hẹn tiêm:</label>
+    <input type="date" name="scheduledDate" id="vac-date" required>
+
+    <label>Mũi tiêm (số/thông tin):</label>
+    <input type="text" name="dose" id="vac-dose">
+
+    <label>Trạng thái:</label>
+    <select name="status" id="vac-status">
+      <option value="scheduled">Đã lên lịch</option>
+      <option value="completed">Đã tiêm</option>
+      <option value="cancelled">Đã huỷ</option>
+    </select>
+
+    <button type="submit">💾 Lưu lịch tiêm</button>
+  </form>
+
+  <hr>
+
+  <h2>Danh sách lịch tiêm</h2>
+  <% if (schedules.length === 0) { %>
+    <p>Chưa có lịch tiêm nào.</p>
+  <% } else { %>
+    <table>
+      <thead>
+        <tr>
+          <th>Người dùng</th>
+          <th>Vắc-xin</th>
+          <th>Ngày hẹn</th>
+          <th>Mũi</th>
+          <th>Trạng thái</th>
+          <th>Hành động</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% schedules.forEach(s => { %>
+          <tr>
+            <td><%= s.userId?.fullName || 'N/A' %></td>
+            <td><%= s.vaccineName %></td>
+            <td><%= s.scheduledDate ? s.scheduledDate.toISOString().substring(0,10) : '' %></td>
+            <td><%= s.dose || '-' %></td>
+            <td><%= s.status %></td>
+            <td>
+              <button type="button"
+                      class="edit-btn"
+                      data-id="<%= s._id %>"
+                      data-userid="<%= s.userId?._id %>"
+                      data-vaccine="<%= s.vaccineName %>"
+                      data-date="<%= s.scheduledDate ? s.scheduledDate.toISOString().substring(0,10) : '' %>"
+                      data-dose="<%= s.dose %>"
+                      data-status="<%= s.status %>">✏️ Sửa</button>
+
+              <form method="POST" action="/admin/vaccinations/delete/<%= s._id %>" style="display:inline;">
+                <button type="submit" onclick="return confirm('Xoá lịch tiêm này?')">🗑️ Xoá</button>
+              </form>
+            </td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  <% } %>
+
+  <script>
+    document.querySelectorAll('.edit-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.getElementById('vac-id').value = btn.dataset.id;
+        document.getElementById('vac-userId').value = btn.dataset.userid;
+        document.getElementById('vac-vaccineName').value = btn.dataset.vaccine;
+        document.getElementById('vac-date').value = btn.dataset.date;
+        document.getElementById('vac-dose').value = btn.dataset.dose;
+        document.getElementById('vac-status').value = btn.dataset.status;
+      });
+    });
+  </script>
+</body>
+</html>

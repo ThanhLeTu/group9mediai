@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Quản lý bệnh viện</title>
+  <style>
+    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+    th, td { border: 1px solid #ccc; padding: 10px; text-align: left; }
+    input, textarea, button { padding: 8px; width: 100%; margin-top: 5px; }
+    form { margin-bottom: 20px; }
+  </style>
+</head>
+<body>
+  <h1>🏥 Quản lý bệnh viện</h1>
+
+  <form method="POST" action="/admin/hospitals">
+    <input type="hidden" name="id" id="hospital-id">
+    
+    <label>Tên bệnh viện:</label>
+    <input type="text" name="name" id="hospital-name" required>
+
+    <label>Địa chỉ:</label>
+    <input type="text" name="address" id="hospital-address" required>
+
+    <label>Số điện thoại:</label>
+    <input type="text" name="phone" id="hospital-phone">
+
+    <button type="submit">💾 Lưu</button>
+  </form>
+
+  <hr>
+
+  <h2>Danh sách bệnh viện</h2>
+  <% if (hospitals.length === 0) { %>
+    <p>Chưa có bệnh viện nào.</p>
+  <% } else { %>
+    <table>
+      <thead>
+        <tr>
+          <th>Tên</th>
+          <th>Địa chỉ</th>
+          <th>Điện thoại</th>
+          <th>Hành động</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% hospitals.forEach(h => { %>
+          <tr>
+            <td><%= h.name %></td>
+            <td><%= h.address %></td>
+            <td><%= h.phone %></td>
+            <td>
+              <button type="button" onclick="editHospital('<%= h._id %>', '<%= h.name %>', '<%= h.address %>', '<%= h.phone %>')">✏️ Sửa</button>
+              <form method="POST" action="/admin/hospitals/delete/<%= h._id %>" style="display:inline;">
+                <button type="submit" onclick="return confirm('Bạn chắc chắn muốn xóa?')">🗑️ Xóa</button>
+              </form>
+            </td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  <% } %>
+
+  <script>
+    function editHospital(id, name, address, phone) {
+      document.getElementById('hospital-id').value = id;
+      document.getElementById('hospital-name').value = name;
+      document.getElementById('hospital-address').value = address;
+      document.getElementById('hospital-phone').value = phone;
+    }
+  </script>
+</body>
+</html>

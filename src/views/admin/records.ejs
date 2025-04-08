@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>📝 Quản lý hồ sơ bệnh án</title>
+  <style>
+    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+    th, td { border: 1px solid #ccc; padding: 10px; text-align: left; }
+    form { margin-bottom: 20px; }
+    input, textarea, select, button { padding: 8px; width: 100%; margin-top: 5px; }
+  </style>
+</head>
+<body>
+  <h1>📝 Quản lý hồ sơ bệnh án</h1>
+
+  <form method="POST" action="/admin/records">
+    <input type="hidden" name="id" id="rec-id">
+
+    <label>Người bệnh:</label>
+    <select name="userId" id="rec-userId" required>
+      <% users.forEach(u => { %>
+        <option value="<%= u._id %>"><%= u.fullName %> - <%= u.email %></option>
+      <% }) %>
+    </select>
+
+    <label>Chuẩn đoán:</label>
+    <input type="text" name="diagnosis" id="rec-diagnosis" required>
+
+    <label>Phác đồ điều trị:</label>
+    <textarea name="treatment" id="rec-treatment" rows="2"></textarea>
+
+    <label>Ghi chú:</label>
+    <textarea name="notes" id="rec-notes" rows="2"></textarea>
+
+    <label>Ngày tạo:</label>
+    <input type="date" name="date" id="rec-date">
+
+    <button type="submit">💾 Lưu hồ sơ</button>
+  </form>
+
+  <hr>
+
+  <h2>Danh sách hồ sơ bệnh án</h2>
+  <% if (records.length === 0) { %>
+    <p>Chưa có hồ sơ nào.</p>
+  <% } else { %>
+    <table>
+      <thead>
+        <tr>
+          <th>Người bệnh</th>
+          <th>Chuẩn đoán</th>
+          <th>Điều trị</th>
+          <th>Ghi chú</th>
+          <th>Ngày</th>
+          <th>Hành động</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% records.forEach(r => { %>
+          <tr>
+            <td><%= r.userId?.fullName || 'N/A' %></td>
+            <td><%= r.diagnosis %></td>
+            <td><%= r.treatment || '-' %></td>
+            <td><%= r.notes || '-' %></td>
+            <td><%= r.date ? r.date.toISOString().substring(0,10) : '' %></td>
+            <td>
+              <button type="button"
+                      class="edit-btn"
+                      data-id="<%= r._id %>"
+                      data-userid="<%= r.userId?._id %>"
+                      data-diagnosis="<%= r.diagnosis %>"
+                      data-treatment="<%= r.treatment %>"
+                      data-notes="<%= r.notes %>"
+                      data-date="<%= r.date ? r.date.toISOString().substring(0,10) : '' %>">✏️ Sửa</button>
+
+              <form method="POST" action="/admin/records/delete/<%= r._id %>" style="display:inline;">
+                <button type="submit" onclick="return confirm('Xoá hồ sơ này?')">🗑️ Xoá</button>
+              </form>
+            </td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  <% } %>
+
+  <script>
+    document.querySelectorAll('.edit-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.getElementById('rec-id').value = btn.dataset.id;
+        document.getElementById('rec-userId').value = btn.dataset.userid;
+        document.getElementById('rec-diagnosis').value = btn.dataset.diagnosis;
+        document.getElementById('rec-treatment').value = btn.dataset.treatment;
+        document.getElementById('rec-notes').value = btn.dataset.notes;
+        document.getElementById('rec-date').value = btn.dataset.date;
+      });
+    });
+  </script>
+</body>
+</html>

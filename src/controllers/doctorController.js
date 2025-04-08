@@ -1,5 +1,6 @@
 const Doctor = require('../models/doctor.model');
 const Specialization = require('../models/specialization.model');
+const Hospital = require('../models/hospital.model');
 
 exports.getAllDoctors = async (req, res) => {
   try {
@@ -69,3 +70,46 @@ exports.deleteDoctor = async (req, res) => {
     res.status(500).json({ message: 'Error deleting doctor', error });
   }
 };
+
+
+///////////////////
+
+// Hiển thị giao diện
+exports.renderPage = async (req, res) => {
+    const doctors = await Doctor.find().populate('hospitalId specializationId');
+    const hospitals = await Hospital.find();
+    const specializations = await Specialization.find();
+    res.render('admin/doctors', { doctors, hospitals, specializations });
+  };
+  
+  // Thêm / cập nhật bác sĩ
+  exports.handleForm = async (req, res) => {
+    const { id, fullName, level, specializationId, hospitalId } = req.body;
+  
+    try {
+      if (id) {
+        await Doctor.findByIdAndUpdate(id, { fullName, level, specializationId, hospitalId });
+      } else {
+        await Doctor.create({ fullName, level, specializationId, hospitalId });
+  
+        // ✅ Tự thêm chuyên khoa vào hospital nếu chưa có
+        await Hospital.findByIdAndUpdate(hospitalId, {
+          $addToSet: { departments: specializationId }
+        });
+      }
+  
+      res.redirect('/admin/doctors');
+    } catch (error) {
+      res.status(500).send('Lỗi xử lý bác sĩ');
+    }
+  };
+  
+  // Xóa bác sĩ
+  exports.delete = async (req, res) => {
+    try {
+      await Doctor.findByIdAndDelete(req.params.id);
+      res.redirect('/admin/doctors');
+    } catch (error) {
+      res.status(500).send('Lỗi xóa bác sĩ');
+    }
+  };

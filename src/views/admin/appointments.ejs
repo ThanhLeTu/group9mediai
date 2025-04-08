@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>📅 Quản lý lịch hẹn</title>
+  <style>
+    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+    th, td { border: 1px solid #ccc; padding: 10px; text-align: left; }
+    form { margin-bottom: 20px; }
+    input, select, button { padding: 8px; width: 100%; margin-top: 5px; }
+  </style>
+</head>
+<body>
+  <h1>📅 Quản lý lịch hẹn</h1>
+
+  <form method="POST" action="/admin/appointments">
+    <input type="hidden" name="id" id="appointment-id">
+
+    <label>Người đặt:</label>
+    <select name="userId" id="appointment-userId" required>
+      <% users.forEach(u => { %>
+        <option value="<%= u._id %>"><%= u.fullName %> - <%= u.email %></option>
+      <% }) %>
+    </select>
+
+    <label>Bác sĩ:</label>
+    <select name="doctorId" id="appointment-doctorId" required>
+      <% doctors.forEach(d => { %>
+        <option value="<%= d._id %>"><%= d.fullName %></option>
+      <% }) %>
+    </select>
+
+    <label>Ngày:</label>
+    <input type="date" name="date" id="appointment-date" required>
+
+    <label>Giờ:</label>
+    <input type="time" name="time" id="appointment-time" required>
+
+    <label>Lý do:</label>
+    <input type="text" name="reason" id="appointment-reason">
+
+    <label>Trạng thái:</label>
+    <select name="status" id="appointment-status">
+      <option value="pending">Đang chờ</option>
+      <option value="confirmed">Đã xác nhận</option>
+      <option value="cancelled">Đã hủy</option>
+    </select>
+
+    <button type="submit">💾 Lưu lịch hẹn</button>
+  </form>
+
+  <hr>
+
+  <h2>Danh sách lịch hẹn</h2>
+  <% if (appointments.length === 0) { %>
+    <p>Chưa có lịch hẹn nào.</p>
+  <% } else { %>
+    <table>
+      <thead>
+        <tr>
+          <th>Người đặt</th>
+          <th>Bác sĩ</th>
+          <th>Ngày</th>
+          <th>Giờ</th>
+          <th>Lý do</th>
+          <th>Trạng thái</th>
+          <th>Hành động</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% appointments.forEach(a => { %>
+          <tr>
+            <td><%= a.userId?.fullName || 'N/A' %></td>
+            <td><%= a.doctorId?.fullName || 'N/A' %></td>
+            <td><%= a.date ? a.date.toISOString().substring(0, 10) : '' %></td>
+            <td><%= a.time %></td>
+            <td><%= a.reason %></td>
+            <td><%= a.status %></td>
+            <td>
+              <button type="button"
+                      class="edit-btn"
+                      data-id="<%= a._id %>"
+                      data-userid="<%= a.userId?._id %>"
+                      data-doctorid="<%= a.doctorId?._id %>"
+                      data-date="<%= a.date ? a.date.toISOString().substring(0, 10) : '' %>"
+                      data-time="<%= a.time %>"
+                      data-reason="<%= a.reason %>"
+                      data-status="<%= a.status %>">✏️ Sửa</button>
+
+              <form method="POST" action="/admin/appointments/delete/<%= a._id %>" style="display:inline;">
+                <button type="submit" onclick="return confirm('Xoá lịch hẹn này?')">🗑️ Xoá</button>
+              </form>
+            </td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  <% } %>
+
+  <script>
+    document.querySelectorAll('.edit-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.getElementById('appointment-id').value = btn.dataset.id;
+        document.getElementById('appointment-userId').value = btn.dataset.userid;
+        document.getElementById('appointment-doctorId').value = btn.dataset.doctorid;
+        document.getElementById('appointment-date').value = btn.dataset.date;
+        document.getElementById('appointment-time').value = btn.dataset.time;
+        document.getElementById('appointment-reason').value = btn.dataset.reason;
+        document.getElementById('appointment-status').value = btn.dataset.status;
+      });
+    });
+  </script>
+</body>
+</html>

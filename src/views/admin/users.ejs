@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Quản lý người dùng</title>
+  <style>
+    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+    th, td { border: 1px solid #ccc; padding: 10px; text-align: left; }
+    form { margin-bottom: 20px; }
+    input, select, button { padding: 8px; width: 100%; margin-top: 5px; }
+  </style>
+</head>
+<body>
+  <h1>👥 Quản lý người dùng</h1>
+
+  <form method="POST" action="/admin/users">
+    <input type="hidden" name="id" id="user-id">
+
+    <label>Email:</label>
+    <input type="email" name="email" id="user-email" required>
+
+    <label>Họ tên:</label>
+    <input type="text" name="fullName" id="user-fullname">
+
+    <label>Quyền:</label>
+    <select name="role" id="user-role" required>
+      <option value="client">Client</option>
+      <option value="admin">Admin</option>
+    </select>
+
+    <label>Giới tính:</label>
+    <input type="text" name="gender" id="user-gender">
+
+    <label>Ngày sinh:</label>
+    <input type="date" name="birthDate" id="user-birthDate">
+
+    <label>Địa chỉ:</label>
+    <input type="text" name="address" id="user-address">
+
+    <label>Số điện thoại:</label>
+    <input type="text" name="phone" id="user-phone">
+
+    <button type="submit">💾 Lưu</button>
+  </form>
+
+  <hr>
+
+  <h2>Danh sách người dùng</h2>
+  <% if (users.length === 0) { %>
+    <p>Chưa có người dùng nào.</p>
+  <% } else { %>
+    <table>
+      <thead>
+        <tr>
+          <th>Email</th>
+          <th>Họ tên</th>
+          <th>Quyền</th>
+          <th>SĐT</th>
+          <th>Địa chỉ</th>
+          <th>Ngày sinh</th>
+          <th>Giới tính</th>
+          <th>Hành động</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% users.forEach(u => { %>
+          <tr>
+            <td><%= u.email %></td>
+            <td><%= u.fullName || '' %></td>
+            <td><%= u.role %></td>
+            <td><%= u.profileId?.phone || '' %></td>
+            <td><%= u.profileId?.address || '' %></td>
+            <td><%= u.profileId?.birthDate ? u.profileId.birthDate.toISOString().substring(0, 10) : '' %></td>
+            <td><%= u.profileId?.gender || '' %></td>            
+            <td>
+              <button type="button"
+                      class="edit-btn"
+                      data-id="<%= u._id %>"
+                      data-email="<%= u.email %>"
+                      data-fullname="<%= u.fullName || '' %>"
+                      data-role="<%= u.role %>"
+                      data-gender="<%= u.profileId?.gender || '' %>"
+                      data-birthdate="<%= u.profileId?.birthDate ? u.profileId.birthDate.toISOString().substring(0,10) : '' %>"
+                      data-address="<%= u.profileId?.address || '' %>"
+                      data-phone="<%= u.profileId?.phone || '' %>">✏️ Sửa</button>
+
+              <form method="POST" action="/admin/users/delete/<%= u._id %>" style="display:inline;">
+                <button type="submit" onclick="return confirm('Xoá người dùng này?')">🗑️ Xoá</button>
+              </form>
+            </td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  <% } %>
+
+  <script>
+    document.querySelectorAll('.edit-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.getElementById('user-id').value = btn.dataset.id;
+        document.getElementById('user-email').value = btn.dataset.email;
+        document.getElementById('user-fullname').value = btn.dataset.fullname;
+        document.getElementById('user-role').value = btn.dataset.role;
+        document.getElementById('user-gender').value = btn.dataset.gender;
+        document.getElementById('user-birthDate').value = btn.dataset.birthdate;
+        document.getElementById('user-address').value = btn.dataset.address;
+        document.getElementById('user-phone').value = btn.dataset.phone;
+      });
+    });
+  </script>
+</body>
+</html>

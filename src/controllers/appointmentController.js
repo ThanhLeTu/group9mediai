@@ -1,4 +1,6 @@
 const Appointment = require('../models/appointment.model');
+const User = require('../models/user.model');
+const Doctor = require('../models/doctor.model');
 
 exports.getAppointments = async (req, res) => {
   try {
@@ -46,5 +48,47 @@ exports.deleteAppointment = async (req, res) => {
     res.json({ message: 'Đã xóa lịch hẹn' });
   } catch (error) {
     res.status(500).json({ message: 'Lỗi xóa lịch hẹn', error });
+  }
+};
+///////////////
+
+exports.renderPage = async (req, res) => {
+  try {
+    const appointments = await Appointment.find()
+      .populate('userId', 'fullName email')
+      .populate('doctorId', 'fullName specializationId')
+      .lean();
+
+    const users = await User.find({}, 'fullName email');
+    const doctors = await Doctor.find({}, 'fullName');
+    res.render('admin/appointments', { appointments, users, doctors });
+  } catch (err) {
+    res.status(500).send('Lỗi hiển thị lịch hẹn');
+  }
+};
+
+exports.handleForm = async (req, res) => {
+  const { id, userId, doctorId, date, time, reason, status } = req.body;
+
+  try {
+    if (id) {
+      await Appointment.findByIdAndUpdate(id, { userId, doctorId, date, time, reason, status });
+    } else {
+      const newAppointment = new Appointment({ userId, doctorId, date, time, reason, status });
+      await newAppointment.save();
+    }
+
+    res.redirect('/admin/appointments');
+  } catch (error) {
+    res.status(500).send('Lỗi xử lý lịch hẹn');
+  }
+};
+
+exports.delete = async (req, res) => {
+  try {
+    await Appointment.findByIdAndDelete(req.params.id);
+    res.redirect('/admin/appointments');
+  } catch (error) {
+    res.status(500).send('Lỗi xoá lịch hẹn');
   }
 };
