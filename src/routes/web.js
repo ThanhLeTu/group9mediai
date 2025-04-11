@@ -7,14 +7,16 @@ const userController = require('../controllers/userController');
 const appointmentController = require('../controllers/appointmentController');
 const vaccinationController = require('../controllers/vaccinationController');
 const medicalController = require('../controllers/medicalRecordController');
-
+const adminController = require('../controllers/adminController');
+const upload = require('../middlewares/upload');
+const { checkRole } = require('../middlewares/auth.middleware');
 // Giao diện cơ bản
 router.get('/login', (req, res) => {
-  res.render('login', { error: null });
+  res.render('login', { layout: false, error: null });
 });
 
 router.get('/register', (req, res) => {
-  res.render('register', { message: null });
+  res.render('register', { layout: false, message: null });
 });
 
 router.get('/profile', (req, res) => {
@@ -23,13 +25,29 @@ router.get('/profile', (req, res) => {
 
 router.get('/welcome', (req, res) => {
   const email = req.query.email;
-  res.render('welcome', { email });
+  res.render('welcome', {    email });
 });
-
+router.get('/logout', (req, res) => {
+  // Clear cookie
+  res.clearCookie('token', {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    path: '/',
+    sameSite: 'strict'
+  });
+  
+  // Clear cache headers
+  res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, private');
+  res.setHeader('Pragma', 'no-cache');
+  res.setHeader('Expires', '0');
+  
+  // Redirect với timestamp để tránh cache
+  res.redirect('/login?_=' + Date.now());
+});
 // Dashboard giao diện admin
-router.get('/admin/dashboard', (req, res) => {
-  res.render('admin/dashboard');
-});
+router.get('/admin/dashboard', adminController.dashboard);
+router.get('/admin/appointments', adminController.getAppointments);
+router.get('/admin/hospitals', adminController.getHospitals);
 
 // Giao diện quản lý chuyên khoa (render EJS)
 router.get('/admin/specializations', specializationController.renderPage);
@@ -38,7 +56,6 @@ router.post('/admin/specializations/delete/:id', specializationController.delete
 
 
 // Giao diện admin quản lý bệnh viện
-router.get('/admin/hospitals', hospitalController.renderPage);
 router.post('/admin/hospitals', hospitalController.handleForm);
 router.post('/admin/hospitals/delete/:id', hospitalController.delete);
 
@@ -67,5 +84,9 @@ router.get('/admin/records', medicalController.renderPage);
 router.post('/admin/records', medicalController.handleForm);
 router.post('/admin/records/delete/:id', medicalController.delete);
 
+// Xử lý login
+router.post('/login', userController.loginUser);
+//upload Avatar
+router.post('/admin/doctors', upload.single('avatar'), adminController.handleForm);
 module.exports = router;
 

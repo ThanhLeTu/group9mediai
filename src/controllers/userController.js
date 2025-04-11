@@ -32,27 +32,40 @@ exports.loginUser = async (req, res) => {
     const { email, password } = req.body;
 
     const user = await User.findOne({ email });
-    if (!user) return res.status(404).json({ message: 'Không tìm thấy người dùng' });
+    if (!user) return res.render('login', { error: 'Email không tồn tại', layout: false });
 
     const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) return res.status(400).json({ message: 'Sai mật khẩu' });
+    if (!isMatch) return res.render('login', { error: 'Sai mật khẩu', layout: false });
 
-    const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET, { expiresIn: '7d' });
+    // ✅ Tạo token chứa role
+    const token = jwt.sign(
+      { id: user._id, role: user.role },
+      process.env.JWT_SECRET,
+      { expiresIn: '7d' }
+    );
 
-    res.status(200).json({
-      message: 'Đăng nhập thành công',
-      token,
-      user: {
-        id: user._id,
-        fullName: user.fullName,
-        email: user.email,
-        role: user.role
-      }
+    // ✅ Lưu cookie
+    res.cookie('token', token, {
+      httpOnly: true,
+      sameSite: 'strict',
+      path: '/',
+      secure: false,
+      maxAge: 7 * 24 * 60 * 60 * 1000
     });
-  } catch (err) {
-    res.status(500).json({ message: 'Lỗi server', error: err.message });
+
+    // ✅ Redirect theo role
+    if (user.role === 'admin') {
+      return res.redirect('/admin/dashboard');
+    } else {
+      return res.redirect('/welcome');
+    }
+
+  } catch (error) {
+    console.error(error);
+    res.render('login', { error: 'Lỗi server', layout: false });
   }
 };
+
 
 ////////////
 // Giao diện admin

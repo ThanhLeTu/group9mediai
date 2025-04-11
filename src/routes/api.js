@@ -5,9 +5,8 @@ const {
   loginUser
 } = require('../controllers/userController');
 
-const { verifyToken } = require('../middlewares/auth.middleware');
-const { checkRole } = require('../middlewares/role.middleware');
-
+const { verifyToken, checkRole } = require('../middlewares/auth.middleware');
+const { authenticate } = require('../middlewares/auth.middleware');
 const profileController = require('../controllers/profileController');
 const doctorController = require('../controllers/doctorController');
 const specializationController = require('../controllers/specializationController'); 
@@ -16,21 +15,27 @@ const apptController = require('../controllers/appointmentController');
 const hospitalController = require('../controllers/hospitalController');
 const vaccineController = require('../controllers/vaccinationController');
 
+
 // Auth
 router.post('/register', registerUser);
 router.post('/login', loginUser);
 
 // Protected dashboard
-router.get('/admin/dashboard',
-  verifyToken,
-  checkRole('admin'),
-  (req, res) => {
+router.get(
+  '/admin/dashboard',
+  verifyToken,         // ✅ phải là function
+  checkRole('admin'),  // ✅ phải là function
+  (req, res) => {       // ✅ bạn đang dùng hàm này
     res.json({ message: "Chào Admin!" });
-  });
+  }
+);
 
 // Profile
-router.get('/profile/me', verifyToken, profileController.getMyProfile);
-router.post('/profile', verifyToken, profileController.updateMyProfile);
+// ✅ Route lấy thông tin cá nhân (GET)
+router.get('/profile/me', authenticate, profileController.getMyProfile);
+
+// ✅ Route cập nhật hồ sơ (POST/PUT)
+router.post('/profile', authenticate, profileController.updateMyProfile);
 
 // Doctors
 router.get('/doctors', doctorController.getAllDoctors);
@@ -61,5 +66,6 @@ router.post('/hospitals', hospitalController.createHospital);
 // Vaccinations
 router.get('/vaccinations', vaccineController.getSchedules);
 router.post('/vaccinations', vaccineController.createSchedule);
+
 
 module.exports = router;

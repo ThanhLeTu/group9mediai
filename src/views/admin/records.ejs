@@ -1,99 +1,95 @@
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-  <meta charset="UTF-8">
-  <title>📝 Quản lý hồ sơ bệnh án</title>
-  <style>
-    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-    th, td { border: 1px solid #ccc; padding: 10px; text-align: left; }
-    form { margin-bottom: 20px; }
-    input, textarea, select, button { padding: 8px; width: 100%; margin-top: 5px; }
-  </style>
-</head>
-<body>
-  <h1>📝 Quản lý hồ sơ bệnh án</h1>
+<h1 class="text-2xl font-bold mb-4">📝 Quản lý hồ sơ bệnh án</h1>
 
-  <form method="POST" action="/admin/records">
-    <input type="hidden" name="id" id="rec-id">
+<form method="POST" action="/admin/records" class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+  <input type="hidden" name="id" id="rec-id">
 
-    <label>Người bệnh:</label>
-    <select name="userId" id="rec-userId" required>
+  <div>
+    <label class="block mb-1">Người bệnh:</label>
+    <select name="userId" id="rec-userId" class="bg-gray-800 text-white border p-2 w-full" required>
       <% users.forEach(u => { %>
         <option value="<%= u._id %>"><%= u.fullName %> - <%= u.email %></option>
-      <% }) %>
+      <% }); %>
     </select>
+  </div>
 
-    <label>Chuẩn đoán:</label>
-    <input type="text" name="diagnosis" id="rec-diagnosis" required>
+  <div>
+    <label class="block mb-1">Chuẩn đoán:</label>
+    <input type="text" name="diagnosis" id="rec-diagnosis" class="bg-gray-800 text-white border p-2 w-full" required>
+  </div>
 
-    <label>Phác đồ điều trị:</label>
-    <textarea name="treatment" id="rec-treatment" rows="2"></textarea>
+  <div class="md:col-span-2">
+    <label class="block mb-1">Phác đồ điều trị:</label>
+    <textarea name="treatment" id="rec-treatment" rows="2" class="bg-gray-800 text-white border p-2 w-full"></textarea>
+  </div>
 
-    <label>Ghi chú:</label>
-    <textarea name="notes" id="rec-notes" rows="2"></textarea>
+  <div class="md:col-span-2">
+    <label class="block mb-1">Ghi chú:</label>
+    <textarea name="notes" id="rec-notes" rows="2" class="bg-gray-800 text-white border p-2 w-full"></textarea>
+  </div>
 
-    <label>Ngày tạo:</label>
-    <input type="date" name="date" id="rec-date">
+  <div class="md:col-span-2">
+    <label class="block mb-1">Ngày tạo:</label>
+    <input type="date" name="date" id="rec-date" class="bg-gray-800 text-white border p-2 w-full">
+  </div>
 
-    <button type="submit">💾 Lưu hồ sơ</button>
-  </form>
+  <div class="md:col-span-2">
+    <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">💾 Lưu hồ sơ</button>
+  </div>
+</form>
 
-  <hr>
+<h2 class="text-xl font-semibold mb-4">Danh sách hồ sơ bệnh án</h2>
 
-  <h2>Danh sách hồ sơ bệnh án</h2>
-  <% if (records.length === 0) { %>
-    <p>Chưa có hồ sơ nào.</p>
-  <% } else { %>
-    <table>
-      <thead>
-        <tr>
-          <th>Người bệnh</th>
-          <th>Chuẩn đoán</th>
-          <th>Điều trị</th>
-          <th>Ghi chú</th>
-          <th>Ngày</th>
-          <th>Hành động</th>
+<% if (records.length === 0) { %>
+  <p class="text-gray-400">Chưa có hồ sơ nào.</p>
+<% } else { %>
+  <table class="w-full border border-gray-700 text-white">
+    <thead class="bg-gray-700">
+      <tr>
+        <th class="p-2">Người bệnh</th>
+        <th class="p-2">Chuẩn đoán</th>
+        <th class="p-2">Điều trị</th>
+        <th class="p-2">Ghi chú</th>
+        <th class="p-2">Ngày</th>
+        <th class="p-2">Hành động</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% records.forEach(r => { %>
+        <tr class="border-t border-gray-700">
+          <td class="p-2"><%= r.userId?.fullName || 'N/A' %></td>
+          <td class="p-2"><%= r.diagnosis %></td>
+          <td class="p-2"><%= r.treatment || '-' %></td>
+          <td class="p-2"><%= r.notes || '-' %></td>
+          <td class="p-2"><%= r.date ? r.date.toISOString().substring(0,10) : '' %></td>
+          <td class="p-2 space-x-2">
+            <button type="button"
+                    class="text-yellow-400 hover:underline edit-btn"
+                    data-id="<%= r._id %>"
+                    data-userid="<%= r.userId?._id %>"
+                    data-diagnosis="<%= r.diagnosis %>"
+                    data-treatment="<%= r.treatment %>"
+                    data-notes="<%= r.notes %>"
+                    data-date="<%= r.date ? r.date.toISOString().substring(0,10) : '' %>">✏️ Sửa</button>
+
+            <form method="POST" action="/admin/records/delete/<%= r._id %>" style="display:inline;">
+              <button type="submit" onclick="return confirm('Xoá hồ sơ này?')" class="text-red-400 hover:underline">🗑️ Xoá</button>
+            </form>
+          </td>
         </tr>
-      </thead>
-      <tbody>
-        <% records.forEach(r => { %>
-          <tr>
-            <td><%= r.userId?.fullName || 'N/A' %></td>
-            <td><%= r.diagnosis %></td>
-            <td><%= r.treatment || '-' %></td>
-            <td><%= r.notes || '-' %></td>
-            <td><%= r.date ? r.date.toISOString().substring(0,10) : '' %></td>
-            <td>
-              <button type="button"
-                      class="edit-btn"
-                      data-id="<%= r._id %>"
-                      data-userid="<%= r.userId?._id %>"
-                      data-diagnosis="<%= r.diagnosis %>"
-                      data-treatment="<%= r.treatment %>"
-                      data-notes="<%= r.notes %>"
-                      data-date="<%= r.date ? r.date.toISOString().substring(0,10) : '' %>">✏️ Sửa</button>
+      <% }); %>
+    </tbody>
+  </table>
+<% } %>
 
-              <form method="POST" action="/admin/records/delete/<%= r._id %>" style="display:inline;">
-                <button type="submit" onclick="return confirm('Xoá hồ sơ này?')">🗑️ Xoá</button>
-              </form>
-            </td>
-          </tr>
-        <% }) %>
-      </tbody>
-    </table>
-  <% } %>
-
-  <script>
-    document.querySelectorAll('.edit-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.getElementById('rec-id').value = btn.dataset.id;
-        document.getElementById('rec-userId').value = btn.dataset.userid;
-        document.getElementById('rec-diagnosis').value = btn.dataset.diagnosis;
-        document.getElementById('rec-treatment').value = btn.dataset.treatment;
-        document.getElementById('rec-notes').value = btn.dataset.notes;
-        document.getElementById('rec-date').value = btn.dataset.date;
-      });
+<script>
+  document.querySelectorAll('.edit-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.getElementById('rec-id').value = btn.dataset.id;
+      document.getElementById('rec-userId').value = btn.dataset.userid;
+      document.getElementById('rec-diagnosis').value = btn.dataset.diagnosis;
+      document.getElementById('rec-treatment').value = btn.dataset.treatment;
+      document.getElementById('rec-notes').value = btn.dataset.notes;
+      document.getElementById('rec-date').value = btn.dataset.date;
     });
-  </script>
-</body>
-</html>
+  });
+</script>

@@ -19,7 +19,8 @@ exports.createDoctor = async (req, res) => {
       const existing = await Doctor.findOne({
         fullName: req.body.fullName,
         hospitalId: req.body.hospitalId,
-        specializationId: req.body.specializationId
+        specializationId: req.body.specializationId,
+        avatar: req.body.avatar
       });
       if (existing) {
         return res.status(400).json({ message: 'Bác sĩ đã tồn tại trong bệnh viện với chuyên khoa này' });
@@ -84,24 +85,18 @@ exports.renderPage = async (req, res) => {
   
   // Thêm / cập nhật bác sĩ
   exports.handleForm = async (req, res) => {
-    const { id, fullName, level, specializationId, hospitalId } = req.body;
-  
-    try {
-      if (id) {
-        await Doctor.findByIdAndUpdate(id, { fullName, level, specializationId, hospitalId });
-      } else {
-        await Doctor.create({ fullName, level, specializationId, hospitalId });
-  
-        // ✅ Tự thêm chuyên khoa vào hospital nếu chưa có
-        await Hospital.findByIdAndUpdate(hospitalId, {
-          $addToSet: { departments: specializationId }
-        });
-      }
-  
-      res.redirect('/admin/doctors');
-    } catch (error) {
-      res.status(500).send('Lỗi xử lý bác sĩ');
+    const { id, fullName, level, specializationId, hospitalId, avatar } = req.body;
+
+    if (id) {
+      await Doctor.findByIdAndUpdate(id, { fullName, level, specializationId, hospitalId, avatar });
+    } else {
+      await Doctor.create({ fullName, level, specializationId, hospitalId, avatar });
+    
+      await Hospital.findByIdAndUpdate(hospitalId, {
+        $addToSet: { departments: specializationId }
+      });
     }
+    
   };
   
   // Xóa bác sĩ
