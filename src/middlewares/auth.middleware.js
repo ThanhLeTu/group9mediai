@@ -46,3 +46,8 @@ exports.checkRole = (...allowedRoles) => {
     next();
   };
 };
+// Middleware kiểm tra đã đăng nhập
+exports.ensureAuthenticated = (req, res, next) => {
+  if (req.user) return next();       // Nếu đã đăng nhập
+  res.redirect('/login');            // Nếu chưa, chuyển đến login
+};
