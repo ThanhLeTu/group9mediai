@@ -31,8 +31,8 @@ app.get('/register', (req, res) => {
 app.get('/', (req, res) => {
   res.redirect('/welcome');
 });
-
-
+app.use('/api', require('./src/routes/api'));
+app.use('/api/chatbot', require('./src/routes/chatbot-api'));
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
   console.log(`🚀 Server is running at http://localhost:${PORT}`);

@@ -4,11 +4,11 @@ const Hospital = require('../models/hospital.model');
 const Appointment = require('../models/appointment.model');
 const Vaccination = require('../models/vaccinationSchedule.model');
 const MedicalRecord = require('../models/medicalRecord.model');
+const Specialization = require('../models/specialization.model');
 // Then in your controller:
 exports.dashboard = async (req, res) => {
     try {
       const today = new Date().toISOString().slice(0, 10);
-      const avatar = req.file ? `/uploads/doctors/${req.file.filename}` : undefined;
 
       const stats = {
         totalPatients: await User.countDocuments({ role: 'client' }),
@@ -43,22 +43,29 @@ exports.dashboard = async (req, res) => {
     res.render('admin/appointments', { appointments, users, doctors });
   };
   
-  exports.getHospitals = async (req, res) => {
-    const hospitals = await Hospital.find();
-    res.render('admin/hospitals', { hospitals });
-  };
-  
-  exports.handleForm = async (req, res) => {
+exports.getHospitals = async (req, res) => {
+  try {
+    const hospitals = await Hospital.find().populate('departments');
+    const specializations = await Specialization.find(); // ✅ lấy danh sách khoa
+
+    res.render('admin/hospitals', {
+      hospitals,
+      specializations, // ✅ truyền vào view
+    });
+  } catch (err) {
+    console.error("Lỗi lấy danh sách bệnh viện:", err);
+    res.status(500).send("Lỗi server khi lấy dữ liệu bệnh viện");
+  }
+};
+exports.handleForm = async (req, res) => {
   const { id, fullName, level, specializationId, hospitalId } = req.body;
-  const avatar = req.file ? `/uploads/doctors/${req.file.filename}` : undefined;
 
   try {
     if (id) {
       const updateData = { fullName, level, specializationId, hospitalId };
-      if (avatar) updateData.avatar = avatar;
       await Doctor.findByIdAndUpdate(id, updateData);
     } else {
-      await Doctor.create({ fullName, level, specializationId, hospitalId, avatar });
+      await Doctor.create({ fullName, level, specializationId, hospitalId });
 
       await Hospital.findByIdAndUpdate(hospitalId, {
         $addToSet: { departments: specializationId }

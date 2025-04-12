@@ -20,7 +20,6 @@ exports.createDoctor = async (req, res) => {
         fullName: req.body.fullName,
         hospitalId: req.body.hospitalId,
         specializationId: req.body.specializationId,
-        avatar: req.body.avatar
       });
       if (existing) {
         return res.status(400).json({ message: 'Bác sĩ đã tồn tại trong bệnh viện với chuyên khoa này' });
@@ -85,12 +84,12 @@ exports.renderPage = async (req, res) => {
   
   // Thêm / cập nhật bác sĩ
   exports.handleForm = async (req, res) => {
-    const { id, fullName, level, specializationId, hospitalId, avatar } = req.body;
+    const { id, fullName, level, specializationId, hospitalId } = req.body;
 
     if (id) {
-      await Doctor.findByIdAndUpdate(id, { fullName, level, specializationId, hospitalId, avatar });
+      await Doctor.findByIdAndUpdate(id, { fullName, level, specializationId, hospitalId });
     } else {
-      await Doctor.create({ fullName, level, specializationId, hospitalId, avatar });
+      await Doctor.create({ fullName, level, specializationId, hospitalId });
     
       await Hospital.findByIdAndUpdate(hospitalId, {
         $addToSet: { departments: specializationId }

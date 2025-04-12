@@ -18,6 +18,16 @@
     <input type="text" name="phone" id="hospital-phone" class="bg-gray-800 text-white border p-2 w-full">
   </div>
 
+  <label>Chuyên khoa:</label>
+  <div class="grid grid-cols-2 gap-2 mb-4">
+    <% specializations.forEach(spec => { %>
+      <label>
+        <input type="checkbox" name="departments" value="<%= spec._id %>" class="department-checkbox">
+        <%= spec.name %>
+      </label>
+    <% }) %>
+  </div>
+  
   <div class="md:col-span-2">
     <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">💾 Lưu</button>
   </div>
@@ -45,8 +55,9 @@
           <td class="p-2"><%= h.phone %></td>
           <td class="p-2 space-x-2">
             <button type="button"
-                    onclick="editHospital('<%= h._id %>', '<%= h.name %>', '<%= h.address %>', '<%= h.phone %>')"
-                    class="text-yellow-400 hover:underline">✏️ Sửa</button>
+            onclick='editHospital("<%= h._id %>", "<%= h.name %>", "<%= h.address %>", "<%= h.phone %>", <%- JSON.stringify(h.departments.map(d => d._id.toString())) %>)'
+            class="text-yellow-400 hover:underline">✏️ Sửa</button>
+          
             <form method="POST" action="/admin/hospitals/delete/<%= h._id %>" style="display:inline;">
               <button type="submit" onclick="return confirm('Bạn chắc chắn muốn xóa?')" class="text-red-400 hover:underline">🗑️ Xóa</button>
             </form>
@@ -58,10 +69,15 @@
 <% } %>
 
 <script>
-  function editHospital(id, name, address, phone) {
+  function editHospital(id, name, address, phone, departmentIds = []) {
     document.getElementById('hospital-id').value = id;
     document.getElementById('hospital-name').value = name;
     document.getElementById('hospital-address').value = address;
     document.getElementById('hospital-phone').value = phone;
+
+    // Bỏ chọn tất cả trước
+    document.querySelectorAll('input[name="departments"]').forEach(cb => {
+      cb.checked = departmentIds.includes(cb.value);
+    });
   }
 </script>

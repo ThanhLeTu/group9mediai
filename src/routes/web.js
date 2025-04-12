@@ -10,6 +10,9 @@ const medicalController = require('../controllers/medicalRecordController');
 const adminController = require('../controllers/adminController');
 const upload = require('../middlewares/upload');
 const { checkRole } = require('../middlewares/auth.middleware');
+const Doctor = require('../models/doctor.model');
+const Hospital = require('../models/hospital.model');
+const Specialization = require('../models/specialization.model'); 
 // Giao diện cơ bản
 router.get('/login', (req, res) => {
   res.render('login', { layout: false, error: null });
@@ -23,9 +26,19 @@ router.get('/profile', (req, res) => {
   res.render('profile');
 });
 
-router.get('/welcome', (req, res) => {
-  const email = req.query.email;
-  res.render('welcome', {    email });
+
+router.get('/welcome', async (req, res) => {
+  try {
+    const email = req.query.email || null;
+    const doctors = await Doctor.find().populate('hospitalId').populate('specializationId');
+    const hospitals = await Hospital.find();
+    const specializations = await Specialization.find(); 
+    res.render('welcome', { email, doctors,hospitals , specializations}); // ✅ truyền doctors vào EJS
+
+  } catch (err) {
+    console.error("❌ Lỗi khi render welcome:", err.message);
+    res.render('welcome', { email: null, doctors: [] });
+  }
 });
 router.get('/logout', (req, res) => {
   // Clear cookie
@@ -86,7 +99,6 @@ router.post('/admin/records/delete/:id', medicalController.delete);
 
 // Xử lý login
 router.post('/login', userController.loginUser);
-//upload Avatar
-router.post('/admin/doctors', upload.single('avatar'), adminController.handleForm);
+
 module.exports = router;
 

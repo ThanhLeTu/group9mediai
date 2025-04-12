@@ -14,8 +14,10 @@ const medicalController = require('../controllers/medicalRecordController');
 const apptController = require('../controllers/appointmentController');
 const hospitalController = require('../controllers/hospitalController');
 const vaccineController = require('../controllers/vaccinationController');
-
-
+const chatController = require('../controllers/chatController');
+const { chatWithGemini } = require('../utils/gemini');
+const Specialization = require('../models/specialization.model');
+const Hospital = require('../models/hospital.model');
 // Auth
 router.post('/register', registerUser);
 router.post('/login', loginUser);
@@ -67,5 +69,32 @@ router.post('/hospitals', hospitalController.createHospital);
 router.get('/vaccinations', vaccineController.getSchedules);
 router.post('/vaccinations', vaccineController.createSchedule);
 
+//Chat
 
+router.post('/chat', async (req, res) => {
+  const { message } = req.body;
+  try {
+    const reply = await chatWithGemini(message);
+    res.json({ reply });
+  } catch (error) {
+    res.status(500).json({ reply: '❌ Lỗi xử lý AI.' });
+  }
+});
+
+router.get('/chatbot/specializations', async (req, res) => {
+  const { name } = req.query;
+  const spec = await Specialization.findOne({ name: new RegExp(name, 'i') });
+  if (!spec) return res.status(404).json({ message: 'Không tìm thấy chuyên khoa' });
+  res.json(spec);
+});
+
+router.get('/chatbot/hospitals', async (req, res) => {
+  const specId = req.query.specializationId;
+  const results = await Hospital.find({
+    departments: specId
+  });
+  res.json(results);
+});
+
+router.post('/chatbot/ai-specialization', chatController.chooseSpecializationAI);
 module.exports = router;

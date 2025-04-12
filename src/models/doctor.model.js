@@ -21,7 +21,8 @@ const DoctorSchema = new mongoose.Schema({
     enum: ['Intern', 'Resident', 'Specialist', 'Consultant'],
     required: true,
   },
-  avatar: { type: String },
+  avatar: { type: String,
+    default: '/static/images/default-doctor.jpg'},
 });
 
 module.exports = mongoose.model('Doctor', DoctorSchema);

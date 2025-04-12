@@ -64,19 +64,22 @@ exports.renderPage = async (req, res) => {
   
   // Thêm hoặc cập nhật
   exports.handleForm = async (req, res) => {
-    const { id, name, address, phone } = req.body;
-  
     try {
+      const { id, fullName, level, specializationId, hospitalId } = req.body;
+  
       if (id) {
-        await Hospital.findByIdAndUpdate(id, { name, address, phone });
+        await Doctor.findByIdAndUpdate(id, { fullName, level, specializationId, hospitalId });
       } else {
-        await Hospital.create({ name, address, phone });
+        await Doctor.create({ fullName, level, specializationId, hospitalId});
       }
-      res.redirect('/admin/hospitals');
+  
+      res.redirect('/admin/doctors'); // ⬅️ Cần phải res.redirect hoặc res.send
     } catch (error) {
-      res.status(500).send('Lỗi xử lý bệnh viện');
+      console.error("❌ Lỗi khi xử lý doctor:", error);
+      res.status(500).send("Lỗi khi lưu bác sĩ");
     }
   };
+  
   
   // Xóa bệnh viện
   exports.delete = async (req, res) => {

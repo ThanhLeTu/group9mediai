@@ -1,0 +1,27 @@
+<!-- Khung chat nổi bên dưới góc phải -->
+<div id="chatbot" class="fixed bottom-6 right-6 w-80 bg-white shadow-xl rounded-lg overflow-hidden border border-gray-300 z-50">
+    <!-- Header -->
+    <div class="bg-blue-600 text-white px-4 py-3 flex justify-between items-center">
+      <h3 class="font-semibold">🤖 MediBot</h3>
+      <button onclick="toggleChatbot()" class="text-white hover:text-red-300">&times;</button>
+    </div>
+  
+    <!-- Nội dung chat -->
+    <div id="chatMessages" class="h-64 overflow-y-auto p-3 bg-gray-50 space-y-2 text-sm">
+      <!-- Tin nhắn AI hoặc người dùng sẽ được thêm vào đây -->
+    </div>
+  
+    <!-- Nhập tin nhắn -->
+    <form id="chatForm" class="flex border-t">
+      <input type="text" id="chatInput" placeholder="Nhập câu hỏi..." class="flex-1 p-2 text-sm outline-none" required />
+      <button type="submit" class="bg-blue-600 text-white px-3 hover:bg-blue-700">Gửi</button>
+    </form>
+  </div>
+  
+  <!-- Nút mở chat -->
+  <button id="openChatBtn" onclick="toggleChatbot()" class="fixed bottom-6 right-6 bg-blue-600 text-white px-4 py-2 rounded-full shadow-lg z-40">
+    💬 Trò chuyện
+  </button>
+  <script src="/static/js/chat.js"></script>
+
+  
