@@ -1,0 +1,44 @@
+<!-- Tiêu đề -->
+<div class="text-center mt-12">
+    <h2 class="text-4xl font-bold text-purple-700 mb-2">🩺 Danh sách chuyên khoa</h2>
+    <p class="text-gray-600">Khám phá các chuyên khoa hiện có trong hệ thống Medi9 Health.</p>
+  
+    <!-- Tabs điều hướng -->
+    <div class="flex justify-center mt-6 space-x-4">
+      <a href="/welcome" class="px-4 py-2 rounded bg-gray-200 hover:bg-gray-300 text-gray-700">👨‍⚕️ Bác sĩ</a>
+      <a href="/hospitals" class="px-4 py-2 rounded bg-gray-200 hover:bg-gray-300 text-gray-700">🏥 Bệnh viện</a>
+      <a href="/specializations" class="px-4 py-2 rounded bg-purple-700 text-white">🩺 Chuyên khoa</a>
+    </div>
+  </div>
+  
+  <!-- Hàm chọn icon -->
+  <% function getIcon(name) {
+    const map = {
+      'Cardiology': '❤️‍🔥',
+      'Neurology': '🧠',
+      'Dermatology': '🧴',
+      'Gastroenterology': '🍽️',
+      'Orthopedics': '🦴',
+      'Pediatrics': '👶',
+      'Obstetrics and Gynecology': '🤰',
+      'Oncology': '🎗️',
+    };
+    return map[name] || '🩺';
+  } %>
+  
+  <!-- Chuyên khoa -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mt-12 px-4 pb-16">
+    <% specializations.forEach(spec => { %>
+      <div class="bg-white rounded-2xl p-6 shadow hover:shadow-md transition-all border text-center">
+        <div class="text-4xl mb-2"><%= getIcon(spec.name) %></div>
+        <h4 class="text-lg font-semibold text-purple-800 mb-1"><%= spec.name %></h4>
+        <p class="text-sm text-gray-600 min-h-[50px]"><%= spec.description || 'Chuyên khoa y tế tổng quát.' %></p>
+        
+        <a href="/specializations/<%= spec._id %>" 
+           class="mt-3 inline-block px-4 py-2 bg-blue-600 text-white text-sm rounded hover:bg-blue-700 transition">
+          🔍 Xem bác sĩ
+        </a>
+      </div>
+    <% }) %>
+  </div>
+  

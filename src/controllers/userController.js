@@ -39,11 +39,16 @@ exports.loginUser = async (req, res) => {
 
     // ✅ Tạo token chứa role
     const token = jwt.sign(
-      { id: user._id, role: user.role },
+      {
+        id: user._id,
+        role: user.role,
+        fullName: user.fullName,    // ✅ THÊM DÒNG NÀY
+        email: user.email           // ✅ Khuyến khích thêm email nếu cần
+      },
       process.env.JWT_SECRET,
       { expiresIn: '7d' }
     );
-
+    
     // ✅ Lưu cookie
     res.cookie('token', token, {
       httpOnly: true,
