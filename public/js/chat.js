@@ -1,5 +1,3 @@
-// ✅ BƯỚC 4: Hiển thị lựa chọn dạng button tương tác thay vì văn bản
-
 const chatbot = document.getElementById('chatbot');
 const openBtn = document.getElementById('openChatBtn');
 const form = document.getElementById('chatForm');
@@ -13,13 +11,7 @@ function toggleChatbot() {
   openBtn.style.display = chatbot.style.display === 'block' ? 'none' : 'block';
 
   if (chatbot.style.display === 'block') {
-    fetch('/api/chat', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ message: 'Xin chào!', system: true })
-    })
-      .then(res => res.json())
-      .then(data => appendMessage('🤖 MediBot', data.reply));
+    appendMessage('🤖 MediBot', "Hello! I'm MediBot, your medical assistant. Please describe your symptoms to begin the appointment booking process.");
   }
 }
 
@@ -36,9 +28,8 @@ form.addEventListener('submit', async (e) => {
   const message = input.value.trim();
   if (!message) return;
 
-  appendMessage('👤 Bạn', message);
+  appendMessage('👤 You', message);
   input.value = '';
-
   handleUserInput(message);
 });
 
@@ -46,66 +37,56 @@ async function handleUserInput(message) {
   try {
     if (chatState.step === 'symptom') {
       chatState.symptom = message;
-    
+
       const aiRes = await fetch('/api/chatbot/ai-specialization', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           symptom: message,
-          specializations: [
-            'Otorhinolaryngology',
-            'Cardiology',
-            'Neurology',
-            'Dermatology',
-            'Gastroenterology'
-          ]
+          specializations: ['Otorhinolaryngology', 'Cardiology', 'Neurology', 'Dermatology', 'Gastroenterology']
         })
       });
-    
-      const data = await aiRes.json();
-    
-      if (!data.specializationName)
-        return appendMessage('🤖 MediBot', '❌ Không tìm thấy chuyên khoa phù hợp.');
-    
-      // Tiếp tục gọi danh sách chuyên khoa từ DB
-      const specRes = await fetch(`/api/chatbot/specializations?name=${encodeURIComponent(data.specializationName)}`);
+
+      const aiData = await aiRes.json();
+      if (!aiData.specializationName)
+        return appendMessage('🤖 MediBot', '❌ I could not find a suitable department for your symptoms.');
+
+      const specRes = await fetch(`/api/chatbot/specializations?name=${encodeURIComponent(aiData.specializationName)}`);
       const specialization = await specRes.json();
-    
+
       chatState.specialization = specialization;
       chatState.step = 'choose_hospital';
-    
+
       const hosRes = await fetch(`/api/chatbot/hospitals?specializationId=${specialization._id}`);
       const hospitals = await hosRes.json();
-    
-      appendMessage('🤖 MediBot', `🩺 Bạn nên khám chuyên khoa: ${specialization.name}. Mời chọn bệnh viện bên dưới:`);
+
+      appendMessage('🤖 MediBot', `🩺 You should visit the ${specialization.name} department. Please choose a hospital:`);
       showOptions(hospitals, 'hospital');
-        
+
     } else if (chatState.step === 'choose_doctor') {
       const docRes = await fetch(`/api/chatbot/doctors?hospitalId=${chatState.hospital._id}&specializationId=${chatState.specialization._id}`);
       const doctors = await docRes.json();
-    
-      if (!doctors.length) {
-        return appendMessage('🤖 MediBot', '❌ Không có bác sĩ nào trong chuyên khoa này tại bệnh viện bạn chọn.');
-      }
-    
-      // ✅ Lưu danh sách để đối chiếu
+
+      if (!doctors.length)
+        return appendMessage('🤖 MediBot', '❌ No doctors found for this department in the selected hospital.');
+
+      chatState.step = 'confirm';
       chatState.doctors = doctors;
-    
-      appendMessage('🤖 MediBot', '🧑‍⚕️ Mời bạn chọn bác sĩ bên dưới:');
-      showOptions(doctors, 'doctor'); 
+
+      appendMessage('🤖 MediBot', '🧑‍⚕️ Please choose a doctor:');
+      showOptions(doctors, 'doctor');
+
     } else if (chatState.step === 'confirm') {
-      const parts = message.split(' ');
-      if (parts.length < 2) return appendMessage('🤖 MediBot', '❗ Vui lòng nhập đúng định dạng ngày giờ.');
+      const parts = message.trim().split(' ');
+      if (parts.length < 2) return appendMessage('❗ Please provide both date and time. Example: 2024-07-20 09:00');
 
       const [date, time] = parts;
-
       const appointment = {
         doctorId: chatState.doctor._id,
-        hospitalId: chatState.hospital._id,
-        specializationId: chatState.specialization._id,
         reason: chatState.symptom,
         date,
-        time
+        time,
+        status: 'pending'
       };
 
       const saveRes = await fetch('/api/chatbot/appointments', {
@@ -115,14 +96,14 @@ async function handleUserInput(message) {
       });
 
       if (saveRes.ok) {
-        appendMessage('🤖 MediBot', '📅 Lịch khám đã được đặt thành công! ✅');
+        appendMessage('🤖 MediBot', '✅ Your appointment has been booked successfully!');
         chatState = { step: 'symptom', symptom: '', specialization: null, hospital: null, doctor: null };
       } else {
-        appendMessage('🤖 MediBot', '❌ Lỗi khi lưu lịch hẹn.');
+        appendMessage('🤖 MediBot', '❌ Failed to save the appointment.');
       }
     }
   } catch (err) {
-    appendMessage('🤖 MediBot', 'Lỗi kết nối tới hệ thống.');
+    appendMessage('🤖 MediBot', '❌ System error. Please try again.');
     console.error(err);
   }
 }
@@ -143,7 +124,7 @@ function showOptions(list, type) {
     btn.className = 'px-3 py-1 m-1 bg-blue-500 text-white rounded hover:bg-blue-600';
     btn.textContent = item.name || item.fullName;
     btn.onclick = () => {
-      appendMessage('👤 Bạn', btn.textContent);
+      appendMessage('👤 You', btn.textContent);
 
       if (type === 'hospital') {
         chatState.hospital = item;
@@ -152,7 +133,7 @@ function showOptions(list, type) {
       } else if (type === 'doctor') {
         chatState.doctor = item;
         chatState.step = 'confirm';
-        handleUserInput(btn.textContent);
+        appendMessage('🤖 MediBot', '📅 Please enter the appointment date and time (e.g. 2024-08-01 09:00)');
       }
     };
     wrapper.appendChild(btn);

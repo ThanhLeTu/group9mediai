@@ -18,6 +18,8 @@ const chatController = require('../controllers/chatController');
 const { chatWithGemini } = require('../utils/gemini');
 const Specialization = require('../models/specialization.model');
 const Hospital = require('../models/hospital.model');
+const Appointment = require('../models/appointment.model');
+
 // Auth
 router.post('/register', registerUser);
 router.post('/login', loginUser);
@@ -97,4 +99,27 @@ router.get('/chatbot/hospitals', async (req, res) => {
 });
 
 router.post('/chatbot/ai-specialization', chatController.chooseSpecializationAI);
+
+
+router.post('/chatbot/appointments', authenticate, async (req, res) => {
+  try {
+    if (!req.user) {
+      return res.status(401).json({ message: 'Bạn cần đăng nhập để đặt lịch.' });
+    }
+
+    const { doctorId, date, time, reason } = req.body;
+    const appointment = await Appointment.create({
+      userId: req.user.id,
+      doctorId,
+      date,
+      time,
+      reason
+    });
+
+    res.json({ success: true, appointment });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false, message: 'Lỗi tạo lịch hẹn' });
+  }
+});
 module.exports = router;
