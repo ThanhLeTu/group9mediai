@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Medicare Admin</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet" />
+</head>
+<body class="bg-gray-900 text-white">
+  <div class="flex">
+    <!-- Sidebar -->
+    <div class="w-64 bg-gray-800 h-screen p-4">
+      <div class="flex items-center mb-8">
+        <img src="https://storage.googleapis.com/a1aa/image/GWAChVj6nrrpUD0VQ9m5wkUkjXYqbn6USa78SlozvYk.jpg" width="40" height="40" class="mr-2" alt="Medicare logo" />
+        <span class="text-xl font-bold">Medicare</span>
+      </div>
+      <nav>
+        <ul>
+          <li class="mb-4"><a href="/admin/dashboard" class="flex items-center text-gray-400 hover:text-white"><i class="fas fa-tachometer-alt mr-2"></i> Dashboard</a></li>
+          <li class="mb-4"><a href="/admin/doctors" class="flex items-center text-gray-400 hover:text-white"><i class="fas fa-user-md mr-2"></i> Doctors</a></li>
+          <li class="mb-4"><a href="/admin/hospitals" class="flex items-center text-gray-400 hover:text-white"><i class="fas fa-hospital mr-2"></i> Hospitals</a></li>
+          <li class="mb-4"><a href="/admin/appointments" class="flex items-center text-gray-400 hover:text-white"><i class="fas fa-calendar-check mr-2"></i> Appointments</a></li>
+          <li class="mb-4"><a href="/admin/users" class="flex items-center text-gray-400 hover:text-white"><i class="fas fa-users mr-2"></i> Users</a></li>
+            <li class="mb-4"><a href="/admin/records" class="flex items-center text-gray-400 hover:text-white"><i class="fas fa-notes-medical mr-2"></i> Medical Records</a></li>
+            <li class="mb-4"><a href="/admin/vaccinations" class="flex items-center text-gray-400 hover:text-white"><i class="fas fa-syringe mr-2"></i> Vaccinations</a></li>
+            <li class="mb-4"><a href="/admin/specializations" class="flex items-center text-gray-400 hover:text-white"><i class="fas fa-stethoscope mr-2"></i> Specializations</a></li>
+
+        </ul>
+      </nav>
+    </div>
+
+    <!-- Main Content -->
+    <div class="flex-1 p-6">
+        <%- include('../partials/header-admin') %>
+      <%- body %>
+    </div>
+  </div>
+</body>
+</html>

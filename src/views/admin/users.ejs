@@ -1,0 +1,112 @@
+<h1 class="text-2xl font-bold mb-4">👥 Quản lý người dùng</h1>
+
+<form method="POST" action="/admin/users" class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+  <input type="hidden" name="id" id="user-id">
+
+  <div>
+    <label class="block mb-1">Email:</label>
+    <input type="email" name="email" id="user-email" class="bg-gray-800 text-white border p-2 w-full" required>
+  </div>
+
+  <div>
+    <label class="block mb-1">Họ tên:</label>
+    <input type="text" name="fullName" id="user-fullname" class="bg-gray-800 text-white border p-2 w-full">
+  </div>
+
+  <div>
+    <label class="block mb-1">Quyền:</label>
+    <select name="role" id="user-role" class="bg-gray-800 text-white border p-2 w-full" required>
+      <option value="client">Client</option>
+      <option value="admin">Admin</option>
+    </select>
+  </div>
+
+  <div>
+    <label class="block mb-1">Giới tính:</label>
+    <input type="text" name="gender" id="user-gender" class="bg-gray-800 text-white border p-2 w-full">
+  </div>
+
+  <div>
+    <label class="block mb-1">Ngày sinh:</label>
+    <input type="date" name="birthDate" id="user-birthDate" class="bg-gray-800 text-white border p-2 w-full">
+  </div>
+
+  <div>
+    <label class="block mb-1">Địa chỉ:</label>
+    <input type="text" name="address" id="user-address" class="bg-gray-800 text-white border p-2 w-full">
+  </div>
+
+  <div>
+    <label class="block mb-1">Số điện thoại:</label>
+    <input type="text" name="phone" id="user-phone" class="bg-gray-800 text-white border p-2 w-full">
+  </div>
+
+  <div class="md:col-span-2">
+    <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">💾 Lưu</button>
+  </div>
+</form>
+
+<h2 class="text-xl font-semibold mb-4">Danh sách người dùng</h2>
+
+<% if (users.length === 0) { %>
+  <p class="text-gray-400">Chưa có người dùng nào.</p>
+<% } else { %>
+  <table class="w-full border border-gray-700 text-white">
+    <thead class="bg-gray-700">
+      <tr>
+        <th class="p-2">Email</th>
+        <th class="p-2">Họ tên</th>
+        <th class="p-2">Quyền</th>
+        <th class="p-2">SĐT</th>
+        <th class="p-2">Địa chỉ</th>
+        <th class="p-2">Ngày sinh</th>
+        <th class="p-2">Giới tính</th>
+        <th class="p-2">Hành động</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% users.forEach(u => { %>
+        <tr class="border-t border-gray-700">
+          <td class="p-2"><%= u.email %></td>
+          <td class="p-2"><%= u.fullName || '' %></td>
+          <td class="p-2"><%= u.role %></td>
+          <td class="p-2"><%= u.profileId?.phone || '' %></td>
+          <td class="p-2"><%= u.profileId?.address || '' %></td>
+          <td class="p-2"><%= u.profileId?.birthDate ? u.profileId.birthDate.toISOString().substring(0, 10) : '' %></td>
+          <td class="p-2"><%= u.profileId?.gender || '' %></td>
+          <td class="p-2 space-x-2">
+            <button type="button"
+                    class="text-yellow-400 hover:underline edit-btn"
+                    data-id="<%= u._id %>"
+                    data-email="<%= u.email %>"
+                    data-fullname="<%= u.fullName || '' %>"
+                    data-role="<%= u.role %>"
+                    data-gender="<%= u.profileId?.gender || '' %>"
+                    data-birthdate="<%= u.profileId?.birthDate ? u.profileId.birthDate.toISOString().substring(0,10) : '' %>"
+                    data-address="<%= u.profileId?.address || '' %>"
+                    data-phone="<%= u.profileId?.phone || '' %>">✏️ Sửa</button>
+
+            <form method="POST" action="/admin/users/delete/<%= u._id %>" style="display:inline;">
+              <button type="submit" onclick="return confirm('Xoá người dùng này?')" class="text-red-400 hover:underline">🗑️ Xoá</button>
+            </form>
+          </td>
+        </tr>
+      <% }); %>
+    </tbody>
+  </table>
+<% } %>
+
+<script>
+  document.querySelectorAll('.edit-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.getElementById('user-id').value = btn.dataset.id;
+      document.getElementById('user-email').value = btn.dataset.email;
+      document.getElementById('user-fullname').value = btn.dataset.fullname;
+      document.getElementById('user-role').value = btn.dataset.role;
+      document.getElementById('user-gender').value = btn.dataset.gender;
+      document.getElementById('user-birthDate').value = btn.dataset.birthdate;
+      document.getElementById('user-address').value = btn.dataset.address;
+      document.getElementById('user-phone').value = btn.dataset.phone;
+    });
+  });
+</script>

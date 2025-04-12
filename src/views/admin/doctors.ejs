@@ -1,0 +1,86 @@
+
+
+
+<!-- views/admin/doctors.ejs -->
+<h1 class="text-2xl font-bold mb-4">🧑‍⚕️ Quản lý bác sĩ</h1>
+
+<form method="POST" action="/admin/doctors" class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+  <input type="hidden" name="id" id="doctor-id">
+
+  <div>
+    <label class="block">Họ tên:</label>
+    <input type="text" name="fullName" id="doctor-name" class="bg-gray-800 text-white border p-2 w-full" required>
+  </div>
+
+  <div>
+    <label class="block">Trình độ:</label>
+    <input type="text" name="level" id="doctor-level" class="bg-gray-800 text-white border p-2 w-full" required>
+  </div>
+
+  <div>
+    <label class="block">Bệnh viện:</label>
+    <select name="hospitalId" id="doctor-hospital" class="bg-gray-800 text-white border p-2 w-full" required>
+      <option value="">-- Chọn bệnh viện --</option>
+      <% hospitals.forEach(h => { %>
+        <option value="<%= h._id %>"><%= h.name %></option>
+      <% }) %>
+    </select>
+  </div>
+
+  <div>
+    <label class="block">Chuyên khoa:</label>
+    <select name="specializationId" id="doctor-specialization" class="bg-gray-800 text-white border p-2 w-full" required>
+      <option value="">-- Chọn chuyên khoa --</option>
+      <% specializations.forEach(s => { %>
+        <option value="<%= s._id %>"><%= s.name %></option>
+      <% }) %>
+    </select>
+  </div>
+  
+  <div class="col-span-full">
+    <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">💾 Lưu</button>
+  </div>
+</form>
+
+<h2 class="text-xl font-semibold mb-4">Danh sách bác sĩ</h2>
+<% if (doctors.length === 0) { %>
+  <p class="text-gray-400">Chưa có bác sĩ nào.</p>
+<% } else { %>
+  <table class="w-full border border-gray-700">
+    <thead class="bg-gray-700">
+      <tr>
+        <th class="p-2">Họ tên</th>
+        <th class="p-2">Trình độ</th>
+        <th class="p-2">Chuyên khoa</th>
+        <th class="p-2">Bệnh viện</th>
+        <th class="p-2">Hành động</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% doctors.forEach(d => { %>
+        <tr class="border-t border-gray-700">
+          <td class="p-2"><%= d.fullName %></td>
+          <td class="p-2"><%= d.level %></td>
+          <td class="p-2"><%= d.specializationId ? d.specializationId.name : '' %></td>
+          <td class="p-2"><%= d.hospitalId ? d.hospitalId.name : '' %></td>
+          <td class="p-2 space-x-2">
+            <button type="button" onclick="editDoctor('<%= d._id %>', '<%= d.fullName %>', '<%= d.level %>', '<%= d.specializationId?._id %>', '<%= d.hospitalId?._id %>')" class="text-yellow-400 hover:underline">✏️ Sửa</button>
+            <form method="POST" action="/admin/doctors/delete/<%= d._id %>" style="display:inline;">
+              <button type="submit" onclick="return confirm('Xác nhận xóa bác sĩ?')" class="text-red-400 hover:underline">🗑️ Xóa</button>
+            </form>
+          </td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+<% } %>
+
+<script>
+  function editDoctor(id, name, level, specId, hospId) {
+    document.getElementById('doctor-id').value = id;
+    document.getElementById('doctor-name').value = name;
+    document.getElementById('doctor-level').value = level;
+    document.getElementById('doctor-specialization').value = specId;
+    document.getElementById('doctor-hospital').value = hospId;
+  }
+</script>

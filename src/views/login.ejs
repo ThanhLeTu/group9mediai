@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Đăng nhập | Medi9</title>
+  <link rel="stylesheet" href="/static/assets/css/styles.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="min-h-screen bg-gradient-to-r from-teal-400 to-blue-500 flex flex-col">
+
+  <!-- ✅ Main content cố định chiều rộng và căn giữa -->
+  <main class="flex-1 flex justify-center items-center px-4">
+    <div class="w-full max-w-md bg-white rounded-lg shadow p-6">
+      <h2 class="text-2xl font-bold text-center text-blue-700 mb-4">🔐 Đăng nhập tài khoản</h2>
+
+      <% if (error) { %>
+        <p class="text-red-500 text-center mb-4"><%= error %></p>
+      <% } %>
+
+      <form action="/login" method="POST" class="space-y-4">
+        <input type="email" name="email" placeholder="Email"
+               class="w-full px-4 py-2 border rounded focus:ring-2 focus:ring-blue-400" required />
+        <input type="password" name="password" placeholder="Mật khẩu"
+               class="w-full px-4 py-2 border rounded focus:ring-2 focus:ring-blue-400" required />
+        <button type="submit"
+                class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded">
+          👉 Đăng nhập
+        </button>
+      </form>
+
+      <p class="text-center text-sm mt-4">
+        Chưa có tài khoản? <a href="/register" class="text-blue-600 hover:underline">Đăng ký ngay</a>
+      </p>
+    </div>
+  </main>
+
+  <!-- ✅ Footer (nếu có) -->
+  <%- include('partials/footer') %>
+
+</body>
+</html>

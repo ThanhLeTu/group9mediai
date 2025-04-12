@@ -1,0 +1,63 @@
+<h1 class="text-2xl font-bold mb-4">📚 Quản lý chuyên khoa</h1>
+
+<h2 class="text-lg font-semibold mb-2"><span id="form-title">Thêm chuyên khoa</span></h2>
+
+<form id="specialization-form" method="POST" action="/admin/specializations" class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+  <input type="hidden" name="id" id="spec-id">
+
+  <div class="md:col-span-2">
+    <label class="block mb-1">Tên chuyên khoa:</label>
+    <input type="text" name="name" id="spec-name" class="bg-gray-800 text-white border p-2 w-full" required>
+  </div>
+
+  <div class="md:col-span-2">
+    <label class="block mb-1">Mô tả:</label>
+    <textarea name="description" id="spec-description" rows="2" class="bg-gray-800 text-white border p-2 w-full"></textarea>
+  </div>
+
+  <div class="md:col-span-2">
+    <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">💾 Lưu</button>
+  </div>
+</form>
+
+<h2 class="text-xl font-semibold mb-4">Danh sách chuyên khoa</h2>
+
+<% if (specializations.length === 0) { %>
+  <p class="text-gray-400">Chưa có chuyên khoa nào.</p>
+<% } else { %>
+  <table class="w-full border border-gray-700 text-white">
+    <thead class="bg-gray-700">
+      <tr>
+        <th class="p-2">Tên chuyên khoa</th>
+        <th class="p-2">Mô tả</th>
+        <th class="p-2">Hành động</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% specializations.forEach(spec => { %>
+        <tr class="border-t border-gray-700">
+          <td class="p-2"><%= spec.name %></td>
+          <td class="p-2"><%= spec.description || '' %></td>
+          <td class="p-2 space-x-2">
+            <button type="button"
+                    onclick="editSpec('<%= spec._id %>', '<%= spec.name %>', `<%= spec.description?.replace(/"/g, '&quot;') || '' %>`)"
+                    class="text-yellow-400 hover:underline">✏️ Sửa</button>
+
+            <form method="POST" action="/admin/specializations/delete/<%= spec._id %>" style="display:inline;">
+              <button type="submit" onclick="return confirm('Bạn chắc chắn muốn xóa chuyên khoa này?')" class="text-red-400 hover:underline">🗑️ Xóa</button>
+            </form>
+          </td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+<% } %>
+
+<script>
+  function editSpec(id, name, description) {
+    document.getElementById('spec-id').value = id;
+    document.getElementById('spec-name').value = name;
+    document.getElementById('spec-description').value = description;
+    document.getElementById('form-title').textContent = 'Cập nhật chuyên khoa';
+  }
+</script>

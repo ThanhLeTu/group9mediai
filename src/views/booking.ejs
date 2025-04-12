@@ -1,0 +1,29 @@
+<div class="max-w-xl mx-auto mt-20 bg-white rounded-xl shadow-lg p-8">
+    <h2 class="text-2xl font-bold text-blue-700 mb-6">📝 Đặt lịch khám</h2>
+  
+    <% if (doctor) { %>
+      <p><strong>Bác sĩ:</strong> <%= doctor.fullName %></p>
+      <p><strong>Chuyên khoa:</strong> <%= doctor.specializationId?.name || 'Chưa rõ' %></p>
+      <p><strong>Bệnh viện:</strong> <%= doctor.hospitalId?.name || 'Chưa rõ' %></p>
+  
+      <form action="/booking" method="POST" class="space-y-4 mt-6">
+        <input type="hidden" name="doctorId" value="<%= doctor._id %>">
+  
+        <label class="block font-medium">Ngày khám:</label>
+        <input type="date" name="date" required class="w-full border rounded px-3 py-2">
+  
+        <label class="block font-medium">Giờ khám:</label>
+        <input type="time" name="time" required class="w-full border rounded px-3 py-2">
+  
+        <label class="block font-medium">Lý do khám:</label>
+        <textarea name="reason" class="w-full border rounded px-3 py-2" rows="3"></textarea>
+  
+        <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700">
+          Gửi yêu cầu
+        </button>
+      </form>
+    <% } else { %>
+      <p class="text-red-500">Không tìm thấy thông tin bác sĩ.</p>
+    <% } %>
+  </div>
+  

@@ -1,0 +1,30 @@
+<div class="max-w-6xl mx-auto mt-12 px-4">
+    <h2 class="text-3xl font-bold text-blue-800 mb-6">📅 Lịch sử đặt lịch khám của bạn</h2>
+  
+    <% if (appointments.length === 0) { %>
+      <p class="text-gray-600">Bạn chưa có lịch hẹn nào.</p>
+    <% } else { %>
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+        <% appointments.forEach(app => { %>
+          <div class="bg-white border rounded-xl shadow-md p-5 transition hover:shadow-lg text-left">
+            <h3 class="text-lg font-semibold text-gray-800 mb-1">
+              👨‍⚕️ <%= app.doctorId?.fullName || 'Bác sĩ' %>
+            </h3>
+            <p class="text-sm text-gray-500 mb-1">
+              🩺 <%= app.doctorId?.specializationId?.name || 'Chuyên khoa' %>
+            </p>
+            <p class="text-sm text-gray-600 mb-1">
+              📅 <%= new Date(app.date).toLocaleDateString() %> - 🕘 <%= app.time %>
+            </p>
+            <p class="text-sm text-gray-500 italic mb-1">
+              Trạng thái: <%= app.status %>
+            </p>
+            <% if (app.reason) { %>
+              <p class="text-sm text-gray-500">📝 <%= app.reason %></p>
+            <% } %>
+          </div>
+        <% }) %>
+      </div>
+    <% } %>
+  </div>
+  
