@@ -1,5 +1,5 @@
 const { chatWithGemini } = require('../utils/gemini');
-
+const Specialization = require('../models/specialization.model');
 exports.chooseSpecializationAI = async (req, res) => {
   const { symptom, specializations } = req.body;
 
@@ -24,5 +24,17 @@ Chỉ trả về đúng tên chuyên khoa đó, không giải thích thêm.
     res.json({ specializationName });
   } catch (err) {
     res.status(500).json({ message: "AI error", error: err.message });
+  }
+};
+
+
+exports.getAllSpecializationNames = async (req, res) => {
+  try {
+    const specs = await Specialization.find({}, 'name'); // chỉ lấy tên
+    const names = specs.map(s => s.name);
+    res.json(names);
+  } catch (err) {
+    console.error("❌ Lỗi lấy danh sách chuyên khoa:", err);
+    res.status(500).json({ message: 'Lỗi server' });
   }
 };

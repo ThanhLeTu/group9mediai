@@ -84,3 +84,5 @@ exports.delete = async (req, res) => {
     await Specialization.findByIdAndDelete(req.params.id);
     res.redirect('/admin/specializations');
   };
+
+  

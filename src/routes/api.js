@@ -99,6 +99,7 @@ router.get('/chatbot/hospitals', async (req, res) => {
 });
 
 router.post('/chatbot/ai-specialization', chatController.chooseSpecializationAI);
+router.get('/chatbot/specialization-names', chatController.getAllSpecializationNames);
 
 
 router.post('/chatbot/appointments', authenticate, async (req, res) => {
