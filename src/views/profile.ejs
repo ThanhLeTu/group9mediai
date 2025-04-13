@@ -3,37 +3,64 @@
 <head>
   <meta charset="UTF-8">
   <title>Hồ sơ cá nhân</title>
-  <link rel="stylesheet" href="/static/assets/css/styles.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
 </head>
-<body>
-  <%- include('partials/header-client') %>
-  <h2>Thông tin cá nhân</h2>
+<body class="bg-gray-100 min-h-screen font-sans">
+  <div class="max-w-2xl mx-auto mt-16 bg-white shadow-md rounded-xl p-8">
+    <h2 class="text-3xl font-bold text-blue-700 mb-6 flex items-center gap-2">
+      <i class="fas fa-user text-blue-500"></i> Hồ sơ cá nhân
+    </h2>
 
-  <form id="profileForm">
-    <label>Họ và tên:</label>
-    <input type="text" id="fullName" placeholder="Họ và tên" disabled>
-    <label>Giới tính:</label>
-    <select id="gender">
-      <option value="">-- Chọn --</option>
-      <option value="male">Nam</option>
-      <option value="female">Nữ</option>
-      <option value="other">Khác</option>
-    </select>
+    <form id="profileForm" class="space-y-4">
+      <div>
+        <label class="block text-sm text-gray-600">Họ và tên:</label>
+        <input type="text" id="fullName" placeholder="Họ và tên" disabled
+               class="w-full px-4 py-2 rounded border bg-gray-100 text-gray-700" />
+      </div>
 
-    <label>Ngày sinh:</label>
-    <input type="date" id="birthDate">
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label class="block text-sm text-gray-600">Giới tính:</label>
+          <select id="gender" class="w-full px-4 py-2 rounded border text-gray-700">
+            <option value="">-- Chọn --</option>
+            <option value="male">Nam</option>
+            <option value="female">Nữ</option>
+            <option value="other">Khác</option>
+          </select>
+        </div>
 
-    <label>Số điện thoại:</label>
-    <input type="text" id="phone" placeholder="Số điện thoại">
+        <div>
+          <label class="block text-sm text-gray-600">Ngày sinh:</label>
+          <input type="date" id="birthDate" class="w-full px-4 py-2 rounded border text-gray-700" />
+        </div>
+      </div>
 
-    <label>Địa chỉ:</label>
-    <input type="text" id="address" placeholder="Địa chỉ">
+      <div>
+        <label class="block text-sm text-gray-600">Số điện thoại:</label>
+        <input type="text" id="phone" placeholder="Số điện thoại"
+               class="w-full px-4 py-2 rounded border text-gray-700" />
+      </div>
 
-    <label>Số CMND/CCCD:</label>
-    <input type="text" id="identityNumber" placeholder="CMND/CCCD">
+      <div>
+        <label class="block text-sm text-gray-600">Địa chỉ:</label>
+        <input type="text" id="address" placeholder="Địa chỉ"
+               class="w-full px-4 py-2 rounded border text-gray-700" />
+      </div>
 
-    <button type="submit">Cập nhật</button>
-  </form>
+      <div>
+        <label class="block text-sm text-gray-600">Số CMND/CCCD:</label>
+        <input type="text" id="identityNumber" placeholder="CMND/CCCD"
+               class="w-full px-4 py-2 rounded border text-gray-700" />
+      </div>
+
+      <div class="pt-4 text-right">
+        <button type="submit"
+                class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 shadow">
+          💾 Cập nhật
+        </button>
+      </div>
+    </form>
+  </div>
 
   <script src="/static/js/profile.js"></script>
 </body>

@@ -5,6 +5,7 @@ const VaccinationScheduleSchema = new mongoose.Schema({
   vaccineName: { type: String, required: true },
   scheduledDate: { type: Date, required: true },
   dose: String,
+  time: String, 
   status: {
     type: String,
     enum: ['scheduled', 'completed', 'cancelled'],

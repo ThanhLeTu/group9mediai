@@ -1,35 +1,57 @@
+<link rel="stylesheet" href="/static/assets/css/vars.css">
+<link rel="stylesheet" href="/static/assets/css/style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 <header class="bg-white shadow-md py-4 px-6 flex justify-between items-center">
-  <a href="/" class="text-xl font-bold text-blue-600">🏥 Medi9 Health</a>
+  <a href="/" class="flex items-center space-x-2">
+    <img src="static/images/logo.png" alt="Medi9AI Logo" class="h-8 w-8">
+    <span class="text-xl font-bold text-green-600">Medi9 Health</span>
+  </a>
+  
 
-  <!-- Nút Tài khoản và dropdown -->
-  <div class="relative" id="accountWrapper">
-    <button id="accountBtn" class="flex items-center space-x-2 text-gray-700 hover:text-blue-600 focus:outline-none">
-      <i class="fas fa-user-circle text-2xl text-blue-600"></i>
-      <span>Tài khoản</span>
-      <i class="fas fa-chevron-down text-xs"></i>
-    </button>
+  <!-- Điều hướng: bệnh viện, chuyên khoa, tiêm chủng -->
+  <div class="flex items-center space-x-6">
+    <a href="/about" class="hover:underline">Giới thiệu</a>
+    <a href="/hospitals" class="text-sm text-gray-700 hover:text-blue-600 font-medium flex items-center">
+      <i class="fas fa-hospital mr-1"></i> Bệnh viện
+    </a>
+    <a href="/specializations" class="text-sm text-gray-700 hover:text-blue-600 font-medium flex items-center">
+      <i class="fas fa-stethoscope mr-1"></i> Chuyên khoa
+    </a>
+    <a href="/vaccinations" class="text-sm text-gray-700 hover:text-blue-600 font-medium flex items-center">
+      <i class="fas fa-syringe mr-1"></i> Tiêm chủng
+    </a>
 
-    <!-- Dropdown -->
-    <div id="accountDropdown" class="absolute right-0 mt-2 bg-white shadow rounded w-56 hidden z-50">
-      <% if (user) { %>
-        <div class="p-4 border-b">
-          <p class="text-gray-700">Xin chào,</p>
-          <p class="font-semibold text-blue-600"><%= user.fullName || 'Người dùng' %></p>
-        </div>
-        <ul class="text-sm text-gray-700">
-          <li><a href="/profile" class="block px-4 py-2 hover:bg-gray-100">📝 Hồ sơ bệnh nhân</a></li>
-          <li><a href="/appointments" class="block px-4 py-2 hover:bg-gray-100">📄 Lịch sử đặt khám</a></li>
-          <li><a href="/notifications" class="block px-4 py-2 hover:bg-gray-100">🔔 Thông báo</a></li>
-        </ul>
-        <div class="border-t">
-          <a href="/logout" class="block px-4 py-2 text-red-500 hover:bg-gray-100">🚪 Đăng xuất</a>
-        </div>
-      <% } else { %>
-        <div class="p-4">
-          <p class="text-sm text-gray-700">Bạn chưa đăng nhập.</p>
-          <a href="/login" class="block mt-2 px-4 py-2 text-blue-600 hover:bg-gray-100 rounded">🔐 Đăng nhập</a>
-        </div>
-      <% } %>
+    <!-- Tài khoản -->
+    <div class="relative" id="accountWrapper">
+      <button id="accountBtn" class="flex items-center space-x-2 text-gray-700 hover:text-blue-600 focus:outline-none">
+        <i class="fas fa-user-circle text-2xl text-blue-600"></i>
+        <span>Tài khoản</span>
+        <i class="fas fa-chevron-down text-xs"></i>
+      </button>
+
+      <!-- Dropdown -->
+      <div id="accountDropdown" class="absolute right-0 mt-2 bg-white shadow rounded w-56 hidden z-50">
+        <% if (user) { %>
+          <div class="p-4 border-b">
+            <p class="text-gray-700">Xin chào,</p>
+            <p class="font-semibold text-blue-600"><%= user.fullName || user.email || 'Người dùng' %></p>
+          </div>
+          <ul class="text-sm text-gray-700">
+            <li><a href="/profile" class="block px-4 py-2 hover:bg-gray-100">📝 Hồ sơ bệnh nhân</a></li>
+            <li><a href="/appointments/history" class="block px-4 py-2 hover:bg-gray-100">📄 Lịch sử đặt khám</a></li>
+            <li><a href="/vaccinations/history" class="block px-4 py-2 hover:bg-gray-100">🧾 Lịch sử tiêm chủng</a></li>
+            <li><a href="/notifications" class="block px-4 py-2 hover:bg-gray-100">🔔 Thông báo</a></li>
+          </ul>
+          <div class="border-t">
+            <a href="/logout" class="block px-4 py-2 text-red-500 hover:bg-gray-100">🚪 Đăng xuất</a>
+          </div>
+        <% } else { %>
+          <div class="p-4">
+            <p class="text-sm text-gray-700">Bạn chưa đăng nhập.</p>
+            <a href="/login" class="block mt-2 px-4 py-2 text-blue-600 hover:bg-gray-100 rounded">🔐 Đăng nhập</a>
+          </div>
+        <% } %>
+      </div>
     </div>
   </div>
 </header>
@@ -38,20 +60,16 @@
   const dropdown = document.getElementById("accountDropdown");
   const wrapper = document.getElementById("accountWrapper");
 
-  btn.addEventListener("click", (e) => {
-    e.stopPropagation();
-    dropdown.classList.toggle("hidden");
-  });
+  if (btn && dropdown && wrapper) {
+    btn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      dropdown.classList.toggle("hidden");
+    });
 
-  document.addEventListener("click", (e) => {
-    if (!wrapper.contains(e.target)) {
-      dropdown.classList.add("hidden");
-    }
-  });
-
-  function logout() {
-    localStorage.removeItem("token");
-    document.cookie = "token=; path=/; max-age=0";
-    window.location.href = "/login";
+    document.addEventListener("click", (e) => {
+      if (!wrapper.contains(e.target)) {
+        dropdown.classList.add("hidden");
+      }
+    });
   }
 </script>
