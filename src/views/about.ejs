@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Giới Thiệu - Medi9AI</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet"/>
+</head>
+<body class="font-roboto bg-gray-100">
+  <!-- About Us Section -->
+  <section class="bg-white py-12">
+    <div class="container mx-auto">
+      <h1 class="text-4xl font-bold text-blue-600 text-center">Giới Thiệu Về Medi9AI</h1>
+      <div class="mt-8 flex flex-col md:flex-row items-center">
+        <div class="md:w-1/2">
+          <img src="static/images/logo.png"  alt="Đội ngũ Medi9AI" class="rounded-lg shadow-lg" />
+        </div>
+        <div class="md:w-1/2 mt-8 md:mt-0 md:pl-8">
+          <p class="text-gray-700">
+            Medi9AI là nền tảng đặt lịch khám bệnh trực tuyến hàng đầu, giúp bạn dễ dàng kết nối với các chuyên gia y tế và đặt lịch khám bệnh một cách nhanh chóng và tiện lợi. Chúng tôi cam kết mang đến cho bạn trải nghiệm chăm sóc sức khỏe tốt nhất.
+          </p>
+          <p class="mt-4 text-gray-700">
+            Với đội ngũ bác sĩ và chuyên gia y tế giàu kinh nghiệm, Medi9AI luôn sẵn sàng hỗ trợ bạn trong việc chăm sóc sức khỏe. Chúng tôi cung cấp các dịch vụ tư vấn trực tuyến, đặt lịch khám và quản lý hồ sơ bệnh án một cách an toàn và bảo mật.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Our Mission Section -->
+  <section class="bg-gray-100 py-12">
+    <div class="container mx-auto text-center">
+      <h2 class="text-3xl font-bold text-blue-600">Sứ Mệnh Của Chúng Tôi</h2>
+      <p class="mt-4 text-gray-700">
+        Sứ mệnh của Medi9AI là mang đến cho mọi người trải nghiệm chăm sóc sức khỏe tốt nhất thông qua công nghệ tiên tiến và dịch vụ chuyên nghiệp.
+      </p>
+      <div class="mt-8 grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div class="bg-white p-6 rounded-lg shadow-lg">
+          <img src="https://cdn-icons-png.flaticon.com/512/2965/2965567.png" class="mx-auto mb-4 w-24 h-24" alt="Chăm Sóc Sức Khỏe" />
+          <h3 class="text-xl font-bold text-blue-600">Chăm Sóc Sức Khỏe</h3>
+          <p class="mt-2 text-gray-700">
+            Đảm bảo mọi người đều có quyền tiếp cận dịch vụ chăm sóc sức khỏe chất lượng.
+          </p>
+        </div>
+        <div class="bg-white p-6 rounded-lg shadow-lg">
+          <img src="https://cdn-icons-png.flaticon.com/512/4359/4359971.png" class="mx-auto mb-4 w-24 h-24" alt="Công Nghệ Tiên Tiến" />
+          <h3 class="text-xl font-bold text-blue-600">Công Nghệ Tiên Tiến</h3>
+          <p class="mt-2 text-gray-700">
+            Sử dụng công nghệ tiên tiến để cải thiện trải nghiệm chăm sóc sức khỏe.
+          </p>
+        </div>
+        <div class="bg-white p-6 rounded-lg shadow-lg">
+          <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" class="mx-auto mb-4 w-24 h-24" alt="Dịch Vụ Chuyên Nghiệp" />
+          <h3 class="text-xl font-bold text-blue-600">Dịch Vụ Chuyên Nghiệp</h3>
+          <p class="mt-2 text-gray-700">
+            Cung cấp dịch vụ chuyên nghiệp và tận tâm cho mọi khách hàng.
+          </p>
+        </div>
+      </div>      
+    </div>
+  </section>
+
+  <!-- Our Team Section -->
+  <section class="bg-white py-12">
+    <div class="container mx-auto text-center">
+      <h2 class="text-3xl font-bold text-blue-600">Đội Ngũ Của Chúng Tôi</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 px-6">
+        <% doctors.forEach(doctor=> { %>
+          <div class="bg-gray-50 rounded-2xl shadow-lg overflow-hidden transition hover:shadow-xl">
+            <img src="<%= doctor.avatar || '/static/images/default-doctor.jpg' %>"
+              class="w-full h-52 object-contain bg-white rounded-t-2xl">
+            <div class="p-4 text-left">
+              <h3 class="text-lg font-bold text-gray-800 mb-1">
+                <%= doctor.fullName || doctor.email %>
+              </h3>
+              <p class="text-sm text-gray-500 italic mb-2">
+                <%= doctor.specializationId?.name || 'Chuyên khoa khác' %>
+              </p>
+              <a href="/booking/<%= doctor._id %>"
+                class="inline-block px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 text-sm">Đặt khám</a>
+            </div>
+          </div>
+          <% }) %>
+      </div>
+    </div>
+  </section>
+
+</body>
+</html>

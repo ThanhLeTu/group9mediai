@@ -1,0 +1,13 @@
+
+
+<div class="max-w-xl mx-auto mt-20 bg-white shadow-md rounded-xl p-6 text-center">
+  <h2 class="text-2xl font-bold text-green-600 mb-4">✅ Đặt giờ tiêm thành công!</h2>
+  <p><strong>Tên vắc xin:</strong> <%= schedule.vaccineName %></p>
+  <p><strong>Ngày tiêm:</strong> <%= new Date(schedule.scheduledDate).toLocaleDateString() %></p>
+  <p><strong>Giờ hẹn:</strong> <%= schedule.time || 'Chưa chọn giờ' %></p>
+  <p><strong>Người tiêm:</strong> <%= schedule.userId?.fullName || schedule.userId?.email || 'Ẩn danh' %></p>
+
+
+  <a href="/vaccinations" class="mt-4 inline-block px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Quay lại danh sách lịch tiêm</a>
+</div>
+

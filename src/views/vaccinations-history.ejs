@@ -1,0 +1,32 @@
+
+
+<div class="max-w-4xl mx-auto mt-10 p-6 bg-white shadow-md rounded-lg">
+  <h2 class="text-2xl font-bold text-blue-600 mb-4">📋 Lịch sử tiêm chủng</h2>
+
+  <% if (schedules.length === 0) { %>
+    <p class="text-gray-600">Bạn chưa có lịch sử tiêm chủng nào.</p>
+  <% } else { %>
+    <table class="w-full table-auto border-collapse border border-gray-300">
+      <thead>
+        <tr class="bg-gray-100">
+          <th class="border border-gray-300 px-4 py-2">Tên vắc xin</th>
+          <th class="border border-gray-300 px-4 py-2">Ngày tiêm</th>
+          <th class="border border-gray-300 px-4 py-2">Giờ</th>
+          <th class="border border-gray-300 px-4 py-2">Tình trạng</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% schedules.forEach(schedule => { %>
+          <tr>
+            <td class="border border-gray-300 px-4 py-2"><%= schedule.vaccineName %></td>
+            <td class="border border-gray-300 px-4 py-2"><%= new Date(schedule.scheduledDate).toLocaleDateString() %></td>
+            <td class="border border-gray-300 px-4 py-2"><%= schedule.time || 'Chưa chọn' %></td>
+            <td class="border border-gray-300 px-4 py-2 capitalize"><%= schedule.status %></td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  <% } %>
+</div>
+
+<%- include('partials/footer') %>

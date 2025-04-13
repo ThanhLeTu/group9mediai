@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Đăng nhập | Medi9</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+
+    ::placeholder {
+      color: #9ca3af;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body class="min-h-screen bg-gradient-to-r from-blue-100 to-green-100 flex flex-col items-center justify-center px-4">
+
+  <!-- 🔐 Login Box -->
+  <div class="w-full max-w-md bg-white rounded-xl shadow-lg border border-gray-300 p-8 space-y-6">
+    <!-- Header -->
+    <div class="text-center">
+      <!-- Logo -->
+      <img src="/static/images/logo.png" alt="Medi9 Logo" class="w-16 h-16 mx-auto mb-2">
+      <h1 class="text-3xl font-bold text-green-800">Đăng nhập</h1>
+      <p class="text-gray-600 text-sm">Chào mừng bạn quay trở lại Medi9</p>
+    </div>
+
+    <!-- Thông báo lỗi nếu có -->
+    <% if (error) { %>
+      <div class="text-red-600 text-center font-medium bg-red-100 p-2 rounded">
+        <%= error %>
+      </div>
+    <% } %>
+
+    <!-- Login Form -->
+    <form action="/login" method="POST" class="space-y-4">
+      <div>
+        <label for="email" class="block text-sm font-semibold mb-1">Email</label>
+        <input type="email" name="email" id="email"
+               class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-600 focus:outline-none"
+               placeholder="email@example.com" required>
+      </div>
+
+      <div>
+        <label for="password" class="block text-sm font-semibold mb-1">Mật khẩu</label>
+        <input type="password" name="password" id="password"
+               class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-600 focus:outline-none"
+               placeholder="Nhập mật khẩu" required>
+      </div>
+
+      <button type="submit"
+              class="w-full flex items-center justify-center gap-2 bg-green-700 hover:bg-green-800 text-white font-semibold py-2 rounded-md transition">
+        <span>🩺</span> <span>Đăng nhập</span>
+      </button>
+    </form>
+
+    <!-- Link Đăng ký -->
+    <p class="text-center text-sm text-gray-600">
+      Chưa có tài khoản?
+      <a href="/register" class="text-green-700 font-medium hover:underline">Đăng ký ngay</a>
+    </p>
+  </div>
+
+  <!-- Footer -->
+  <footer class="mt-6 text-gray-500 text-sm text-center">
+    © 2025 Medi9. All rights reserved.
+  </footer>
+
+</body>
+</html>
