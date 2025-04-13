@@ -65,3 +65,10 @@ body {
 .btn-sm {
     margin-right: 5px;
 }
+/* Đảm bảo swiper layout ngang */
+.swiper-wrapper {
+  display: flex;
+}
+.swiper-slide {
+  width: auto;
+}
